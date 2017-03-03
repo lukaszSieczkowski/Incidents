@@ -1,0 +1,51 @@
+.container-fluid{
+	/*
+	background-color:#ffbb33;
+	
+	*/
+    background-image: url(../pics/safety.jpg);
+    background-size:cover;
+    background-repeat: no-repeat;
+    height: 100vh;
+}
+.upper_container{
+    height:30vh;
+}
+.form-horizontal{
+	margin:30px;
+	padding:30px;
+    background-color: white;
+	border-radius: 30px;
+	-webkit-box-shadow: 27px 24px 80px -9px rgba(0,0,0,0.77);
+	-moz-box-shadow: 27px 24px 80px -9px rgba(0,0,0,0.77);
+	box-shadow: 27px 24px 80px -9px rgba(0,0,0,0.77);
+}
+.btn-warning{
+	width:150px;
+	border: none;
+}
+.btn-warning:hover {
+	background: rgba(0,0,0,0);
+	color: #ffbb33;
+	box-shadow: inset 0 0 0 3px #ffbb33;
+}
+.glyphicon{
+	margin-right:20px;
+}
+h1{
+	padding-top:10vh;
+	font-size:30px;
+	color:white;
+	font-style:oblique;
+	font-weight:bold;
+	text-shadow: 3px 2px black;
+}
+.help-block{
+	color:red;
+}
+
+
+
+
+
+	
