@@ -2,6 +2,7 @@ package pl.incidents.controllers;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Modifier;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -12,7 +13,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.jar.Attributes.Name;
 import java.util.stream.Collectors;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -30,7 +34,7 @@ import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.context.request.WebRequest;
 
 import pl.incidents.components.IncidentList;
-
+import pl.incidents.components.UserList;
 import pl.incidents.dao.IncidentDao;
 import pl.incidents.dao.IncidentDaoImplementation;
 import pl.incidents.dao.UserDao;
@@ -41,18 +45,25 @@ import pl.incidents.model.enums.Area;
 import pl.incidents.model.enums.CathegoryOfPersonel;
 import pl.incidents.model.enums.EventType;
 import pl.incidents.model.enums.SupervisorInformed;
+import pl.incidents.model.enums.UserActive;
 import pl.incidents.model.enums.UserType;
 import pl.incidents.utils.CreateDate;
+import pl.incidents.utils.Mail;
+import pl.incidents.utils.PasswordGenerator;
 
 @Controller
 @SessionAttributes("user")
 public class MainController {
 	private IncidentList incidentList;
+	private UserList usersList;
 
 	@Autowired
-	public MainController(IncidentList incidentList) {
+	public MainController(IncidentList incidentList,UserList usersList) {
 		this.incidentList = incidentList;
+		this.usersList = usersList;
 	}
+
+	
 
 	@RequestMapping("/")
 	public String showMain() {
@@ -71,29 +82,31 @@ public class MainController {
 		if (optionalUser.isPresent()) {
 			User user = optionalUser.get();
 			if (user.getPassword().equals(password)) {
+				
 				model.addAttribute("user", user);
+				
 				LocalDateTime date = LocalDateTime.now();
 				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 				String formatedDate = date.format(formatter);
 				model.addAttribute("date", formatedDate);
+				
 				List<Incident> incidents = incidentDao.getIncidents();
 				incidentList.setIncidents(incidents);
 				model.addAttribute("incidents", incidentList.getIncidents());
-				
-					return "showIncidents";
-				}
-				} else {
-					String alert = "Incorrect Password !!!";
-					model.addAttribute("alert", alert);
-					return "index";
-				}
-		return  "index";
 
-	//} else {
-		//	String alert = "User does't exist !!!";
-		//	model.addAttribute("alert", alert);
-		//	return "index";
-		//}
+				return "showIncidents";
+
+			} else {
+				String alert = "Incorrect Password !!!";
+				model.addAttribute("alert", alert);
+				return "index";
+			}
+		} else {
+			String alert = "User does't exist!!!";
+			model.addAttribute("alert", alert);
+			return "index";
+		}
+
 	}
 
 	@RequestMapping("/logout")
@@ -159,7 +172,6 @@ public class MainController {
 	public String showStatistics(@RequestParam String dateStart, @RequestParam String dateEnd,
 			@RequestParam String area, @RequestParam String typeOfObservation, @RequestParam String cathegoryOfPersonel,
 			Model model) {
-
 		CreateDate createDate = new CreateDate();
 		IncidentDao incidentDao = new IncidentDaoImplementation();
 		List<Incident> incidents = incidentDao.getIncidents();
@@ -197,4 +209,50 @@ public class MainController {
 		return "showIncidents";
 
 	}
-}
+	
+	@RequestMapping("/addUser")
+	public String addUser(){
+		return "addUser";
+	}
+	
+	@RequestMapping("/saveUser")
+	public String saveUser(@RequestParam String name,@RequestParam String surname, 
+			@RequestParam String email,@RequestParam String userType,Model model){
+		
+		System.out.println("Imi� "+name);
+		System.out.println("Nazwisko "+surname);
+		String password;
+		String alert;
+		PasswordGenerator passwordGenerator = new PasswordGenerator();
+		password=passwordGenerator.generatePasword();
+	
+		User user = new User(email,password,UserType.valueOf(userType),name,surname,UserActive.valueOf("ACTIVE"));
+		UserDao userDao = new UserDaoImplementation();
+		userDao.saveUser(user);
+		
+		alert = "The user has been saved successfuly !!!";
+		model.addAttribute("alert", alert);
+		
+		Mail mail = new Mail();
+		String mailContent = mail.prepareContent(user);
+		String mailSubject =mail.prepareSubject();
+		mail.sendMail(user.getEmail(), mailContent, mailSubject);
+		System.out.println(user);
+	
+		return "addUser";
+	}
+	
+	@RequestMapping("/getUsers")
+	public String showUsers(Model model){
+		UserDao userDao = new UserDaoImplementation();
+		List<User> users = userDao.getUsers();
+		
+		usersList.setUsers(users);
+		List<User> users2= usersList.getUsers();
+	
+		model.addAttribute("users", usersList);
+		return "showUsers";
+	}
+		
+	}
+

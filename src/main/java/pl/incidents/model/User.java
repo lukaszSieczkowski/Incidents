@@ -13,6 +13,8 @@ import org.springframework.web.context.WebApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.context.annotation.ScopedProxyMode;
+
+import pl.incidents.model.enums.UserActive;
 import pl.incidents.model.enums.UserType;
 
 @Component
@@ -32,27 +34,25 @@ public class User implements Serializable {
 	private String password;
 	@Column(name = "user_type", nullable = false)
 	private UserType userType;
-	@Column(name = "bad_login_number", nullable = false)
-	private int badLoginNumber;
 	@Column(name = "name", nullable = false)
 	private String name;
 	@Column(name = "surname", nullable = false)
 	private String surname;
+	@Column(name = "userActive", nullable = false)
+	private UserActive userActive;
 
 	
 	public User(){
 		
 	}
-	public User(long id, String email, String password, UserType userType, int badLoginNumber, String name,
-			String surname) {
-		super();
-		this.id = id;
+	public User( String email, String password, UserType userType, String name,
+			String surname, UserActive userActive) {
 		this.email = email;
 		this.password = password;
 		this.userType = userType;
-		this.badLoginNumber = badLoginNumber;
 		this.name = name;
 		this.surname = surname;
+		this.userActive=userActive;
 	}
 
 	public long getId() {
@@ -87,13 +87,7 @@ public class User implements Serializable {
 		this.userType = userType;
 	}
 
-	public int getBadLoginNumber() {
-		return badLoginNumber;
-	}
 
-	public void setBadLoginNumber(int badLoginNumber) {
-		this.badLoginNumber = badLoginNumber;
-	}
 
 	public String getName() {
 		return name;
@@ -114,5 +108,11 @@ public class User implements Serializable {
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", email=" + email + ", password=" + password + ", userType=" + userType + ", name="
+				+ name + ", surname=" + surname + ", userActive=" + userActive + "]";
+	}
 
+	
 }

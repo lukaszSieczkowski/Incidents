@@ -17,8 +17,8 @@
 			<li class="dropdown"><a href="#" data-toggle="dropdown"
 				class="dropdown-toggle">Users Manager <b class="caret"></b></a>
 				<ul class="dropdown-menu">
-					<li><a href="#">Inbox</a></li>
-					<li><a href="#">Drafts</a></li>
+					<li><a href="addUser">Add New User</a></li>
+					<li><a href="getUsers">Show Users</a></li>
 					<li><a href="#">Sent Items</a></li>
 					<li class="divider"></li>
 					<li><a href="#">Trash</a></li>
