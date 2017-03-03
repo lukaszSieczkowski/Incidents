@@ -30,7 +30,7 @@ public class SortController {
 				.collect(Collectors.toList());
 		incidentList.setIncidents(incidents);
 		model.addAttribute("incidents", incidentList.getIncidents());
-		return "uShowIncidents";
+		return "showIncidents";
 	}
 
 	@RequestMapping("/sortByIncidentDateAsc")
@@ -43,7 +43,7 @@ public class SortController {
 
 		incidentList.setIncidents(incidents);
 		model.addAttribute("incidents", incidentList.getIncidents());
-		return "uShowIncidents";
+		return "showIncidents";
 	}
 
 	@RequestMapping("/sortByAreaDesc")
@@ -53,7 +53,7 @@ public class SortController {
 				.collect(Collectors.toList());
 		incidentList.setIncidents(incidents);
 		model.addAttribute("incidents", incidentList.getIncidents());
-		return "uShowIncidents";
+		return "showIncidents";
 	}
 
 	@RequestMapping("/sortByAreaAsc")
@@ -64,7 +64,7 @@ public class SortController {
 		Collections.reverse(incidents);
 		incidentList.setIncidents(incidents);
 		model.addAttribute("incidents", incidentList.getIncidents());
-		return "uShowIncidents";
+		return "showIncidents";
 	}
 
 	@RequestMapping("/sortByEventDesc")
@@ -74,7 +74,7 @@ public class SortController {
 				.collect(Collectors.toList());
 		incidentList.setIncidents(incidents);
 		model.addAttribute("incidents", incidentList.getIncidents());
-		return "uShowIncidents";
+		return "showIncidents";
 	}
 
 	@RequestMapping("/sortByEventAsc")
@@ -85,7 +85,7 @@ public class SortController {
 		Collections.reverse(incidents);
 		incidentList.setIncidents(incidents);
 		model.addAttribute("incidents", incidentList.getIncidents());
-		return "uShowIncidents";
+		return "showIncidents";
 	}
 
 	@RequestMapping("/sortByPersonelDesc")
@@ -96,7 +96,7 @@ public class SortController {
 				.collect(Collectors.toList());
 		incidentList.setIncidents(incidents);
 		model.addAttribute("incidents", incidentList.getIncidents());
-		return "uShowIncidents";
+		return "showIncidents";
 	}
 
 	@RequestMapping("/sortByPersonelAsc")
@@ -108,7 +108,7 @@ public class SortController {
 		Collections.reverse(incidents);
 		incidentList.setIncidents(incidents);
 		model.addAttribute("incidents", incidentList.getIncidents());
-		return "uShowIncidents";
+		return "showIncidents";
 	}
 	/*
 	 * @RequestMapping("/sortByReporterlDesc") public String
@@ -117,7 +117,7 @@ public class SortController {
 	 * incidents.stream().sorted((a,b)->(a.getCathegoryOfPersonel().compareTo(b.
 	 * getCathegoryOfPersonel()))).collect(Collectors.toList());
 	 * incidentList.setIncidents(incidents); model.addAttribute("incidents",
-	 * incidentList.getIncidents()); return "uShowIncidents"; }
+	 * incidentList.getIncidents()); return "showIncidents"; }
 	 * 
 	 * @RequestMapping("/sortByReporterlAsc") public String
 	 * sortByReportertAsc(Model model){ List<Incident> incidents =
@@ -126,6 +126,6 @@ public class SortController {
 	 * getCathegoryOfPersonel()))).collect(Collectors.toList());
 	 * Collections.reverse(incidents); incidentList.setIncidents(incidents);
 	 * model.addAttribute("incidents", incidentList.getIncidents()); return
-	 * "uShowIncidents"; }
+	 * "showIncidents"; }
 	 */
 }

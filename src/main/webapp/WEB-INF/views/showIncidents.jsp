@@ -12,9 +12,6 @@
 <c:set var="user" value="${user}" scope="session" />	
 <c:set var="date" value="${date}" scope="session" />	
 
-
-
-	
 <!DOCTYPE html>
 <html>
 <head>
@@ -30,17 +27,14 @@
 	integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp"
 	crossorigin="anonymous">
 	
- <style type="text/css">
-  	<%@include file="css/main.css" %>
-</style>	
-
 <!-- Latest compiled and minified JavaScript -->
 <script
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
 	integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
 	crossorigin="anonymous"></script>
 	
-	<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script type="text/javascript" src="jquery.timepicker.js"></script>
 <script>
@@ -49,6 +43,7 @@
 			dateFormat : "dd-mm-yy",
 			inline : true,
 			dayNamesMin : [ 'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat' ],
+			
 		});
 	});
 </script>
@@ -62,27 +57,21 @@
 	});
 </script>
 
+ <style type="text/css">
+  	<%@include file="css/main.css" %>
+</style>
+
 </head>
 <body>
-	<div class="col-sm-12">
-
-		<nav class="navbar ">
-			<div class="container-fluid">
-				<div class="navbar-header">
-					<a class="navbar-brand">Incident Reporting Tool</a>
-				</div>
-				<ul class="nav navbar-nav">
-					<li><a href="uReportIncident">Report Incident</a></li>
-					<li><a href="uShowIncidents">Show Reported Incidents</a></li>
-					
-				</ul>
-				<ul class="nav navbar-nav navbar-right">
-					<li><a href="logout"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
-				</ul>
-			</div>
-		</nav>
-		
-		
+	<c:if test="${user.userType == 'USER'}">
+   		<jsp:include page="/WEB-INF/views/fragments/menuUser.jsp"/>
+	</c:if>
+	
+	<c:if test="${user.userType == 'ADMIN'}">
+   		<jsp:include page="/WEB-INF/views/fragments/menuAdmin.jsp"/>
+	</c:if>
+	
+	<div class="col-sm-12">	
 		<div class="col-sm-2 ">
 			<div class="alert alert-warning" role="alert">
 				<strong>User:</strong> <c:out value="${user.name}"/> <c:out value="${user.surname}"/> </br> 
@@ -122,7 +111,6 @@
 					</select>
 				</div>
 			</div>
-			
 			<div class="col-sm-2 col-sm-offset-1 ">
 				<div class="form-group">
 					<label for="personel">Cathegory of Personeel</label> <select
@@ -136,68 +124,74 @@
 					<button type="submit" class="btn btn-warning btn-lg ">Submit</button>
 				</div>
 			</div>
-			
-			</form>
+		</form>
 		<div class="col-sm-12  ">
-				<table class="table table-condensed ">
-					<tr>
-						<th class="cell">No.</th>
-						<th>
-							<span class="nowrap">Incident Date ​ 
-							 	<a href="sortByIncidentDateDesc">&#8679;</a>
-							 	<a href="sortByIncidentDateAsc">&#8681;</a>
-							</span>
-						</th> 
-						<th><span class="nowrap">Area ​ 
-							 	<a href="sortByAreaDesc">&#8679;</a>
-							 	<a href="sortByAreaAsc">&#8681;</a>
-							 </span>
-						</th>
-						<th>Exact location </span></th>
-						<th><span class="nowrap">Event Type ​ 
-							 	<a href="sortByEventDesc">&#8679;</a>
-							 	<a href="sortByEventAsc">&#8681;</a>
-							 </span></th> 					
-						<th><span class="nowrap">Personel
-							 	<a href="sortByPersonelDesc">&#8679;</a>
-							 	<a href="sortByPersonelAsc">&#8681;</a>
-							 </span></th> 
-						<th>Details of Safety</th>
-						<th>Action Taken</th> 
-						<th>Supervisior Informed</th>
-						<th><span class="nowrap">Reported by
-							 	<a href="sortByReporterlDesc">&#8679;</a>
-							 	<a href="sortByReporterlAsc">&#8681;</a>
-							 </span></th> 
-						<th>Reporting Date</th>
-						<th>Show Details</th>
-					</tr>
+			<table class="table table-condensed ">
+				<tr>
+					<th class="cell">No.</th>
+					<th>
+						<span class="nowrap">Incident Date ​ 
+							 <a href="sortByIncidentDateDesc">&#8679;</a>
+							 <a href="sortByIncidentDateAsc">&#8681;</a>
+						</span>
+					</th> 
+					<th>
+						<span class="nowrap">Area ​ 
+							 <a href="sortByAreaDesc">&#8679;</a>
+							 <a href="sortByAreaAsc">&#8681;</a>
+						</span>
+					</th>
+					<th>Exact location</th>
+					<th>
+						<span class="nowrap">Event Type ​ 
+							 <a href="sortByEventDesc">&#8679;</a>
+							 <a href="sortByEventAsc">&#8681;</a>
+						</span>
+					</th> 					
+					<th>
+						<span class="nowrap">Personel
+							 <a href="sortByPersonelDesc">&#8679;</a>
+							 <a href="sortByPersonelAsc">&#8681;</a>
+						</span>
+					</th> 
+					<th>Details of Safety</th>
+					<th>Action Taken</th> 
+					<th>Supervisior Informed</th>
+					<th>
+						<span class="nowrap">Reported by
+							 <a href="sortByReporterlDesc">&#8679;</a>
+							 <a href="sortByReporterlAsc">&#8681;</a>
+						</span>
+					</th> 
+					<th>Reporting Date</th>
+					<th>Show Details</th>
+				</tr>
 					
-					<c:forEach var="incident" items="${incidents}" varStatus="loop">
+				<c:forEach var="incident" items="${incidents}" varStatus="loop">
 					
-					<tr>
-						<td>${loop.index+1}</td>
-						<td class="cell"><c:out value="${fn:substring(incident.incidentDate, 0, 10)}"/></br>
-										 <c:out value="${fn:substring(incident.incidentDate, 11,16)}"/></td>
-						<td class="cell"><c:out value="${incident.area}"/></td>
-						
-						<td class="cell"><c:out value="${fn:substring(incident.location, 0, 80)}"/>......</td>
-						<td class="cell"><c:out value="${incident.typeOfObservation}"/></td>
-						<td class="cell"><c:out value="${incident.cathegoryOfPersonel}"/></td>
-						<td class="cell"><c:out value="${fn:substring(incident.details, 0, 80)}"/>......</td>
-						<td class="cell"><c:out value="${fn:substring(incident.action, 0, 80)}"/>......</td> 
-						<td> <c:out value="${incident.supervisorInformed}"/></td>
-						<td class="cell">Reported by...</td>
-						<td class="cell"><c:out value="${fn:substring(incident.reportingDate, 0, 10)}"/>
-										 <c:out value="${fn:substring(incident.reportingDate, 11,16)}"/></td> 
-								<c:set var="a" value="${incident.id}" />
-						<td class="cell"><a href ="uShowIncident?param=<c:out value="${a}"/>">Details...
-						</a></td>
-					</tr>
-					</c:forEach>
-
-				</table>
-			</div>
-		
+				<tr>
+					<td>${loop.index+1}</td>
+					<td class="cell"><c:out value="${fn:substring(incident.incidentDate, 0, 10)}"/></br>
+									<c:out value="${fn:substring(incident.incidentDate, 11,16)}"/></td>
+					<td class="cell"><c:out value="${incident.area}"/></td>
+					<td class="cell"><c:out value="${fn:substring(incident.location, 0, 80)}"/>......</td>
+					<td class="cell"><c:out value="${incident.typeOfObservation}"/></td>
+					<td class="cell"><c:out value="${incident.cathegoryOfPersonel}"/></td>
+					<td class="cell"><c:out value="${fn:substring(incident.details, 0, 80)}"/>......</td>
+					<td class="cell"><c:out value="${fn:substring(incident.action, 0, 80)}"/>......</td> 
+					<td> <c:out value="${incident.supervisorInformed}"/></td>
+					<td class="cell">Reported by...</td>
+					<td class="cell"><c:out value="${fn:substring(incident.reportingDate, 0, 10)}"/>
+									<c:out value="${fn:substring(incident.reportingDate, 11,16)}"/></td>
+									 
+					<c:set var="a" value="${incident.id}" />
+					<td class="cell">
+						<a href ="showIncident?param=<c:out value="${a}"/>">Details...</a>
+					</td>
+				</tr>
+				</c:forEach>
+			</table>
+		</div>
+	</div>
 </body>
 </html>

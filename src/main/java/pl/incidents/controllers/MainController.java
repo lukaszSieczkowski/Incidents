@@ -79,22 +79,21 @@ public class MainController {
 				List<Incident> incidents = incidentDao.getIncidents();
 				incidentList.setIncidents(incidents);
 				model.addAttribute("incidents", incidentList.getIncidents());
-				if (user.getUserType() == UserType.USER) {
-					return "uShowIncidents";
-				} else {
-					return "aShowIncidents";
+				
+					return "showIncidents";
 				}
-			} else {
-				String alert = "Incorrect Password !!!";
-				model.addAttribute("alert", alert);
-				return "index";
-			}
+				} else {
+					String alert = "Incorrect Password !!!";
+					model.addAttribute("alert", alert);
+					return "index";
+				}
+		return  "index";
 
-		} else {
-			String alert = "User does't exist !!!";
-			model.addAttribute("alert", alert);
-			return "index";
-		}
+	//} else {
+		//	String alert = "User does't exist !!!";
+		//	model.addAttribute("alert", alert);
+		//	return "index";
+		//}
 	}
 
 	@RequestMapping("/logout")
@@ -126,33 +125,33 @@ public class MainController {
 		incidentDao.saveIncident(incident);
 		model.addAttribute("incident", incident);
 
-		return "uShowIncident";
+		return "showIncident";
 	}
 
-	@RequestMapping("/uReportIncident")
+	@RequestMapping("/reportIncident")
 	public String reportIncident() {
-		return "uReportIncident";
+		return "reportIncident";
 
 	}
 
-	@GetMapping("/uShowIncident")
+	@GetMapping("/showIncident")
 	public String showIncident(@RequestParam long param, Model model) {
 		IncidentDao incidentDao = new IncidentDaoImplementation();
 		Incident incident = incidentDao.getIncident(param);
 
 		model.addAttribute("incident", incident);
-		return "uShowIncident";
+		return "showIncident";
 
 	}
 
-	@RequestMapping("/uShowIncidents")
+	@RequestMapping("/showIncidents")
 	public String showIncidents(Model model) {
 		IncidentDao incidentDao = new IncidentDaoImplementation();
 		List<Incident> incidents = incidentDao.getIncidents();
 		incidentList.setIncidents(incidents);
 
 		model.addAttribute("incidents", incidentList.getIncidents());
-		return "uShowIncidents";
+		return "showIncidents";
 
 	}
 
@@ -195,7 +194,7 @@ public class MainController {
 
 		incidentList.setIncidents(limitedIncident);
 		model.addAttribute("incidents", incidentList.getIncidents());
-		return "uShowIncidents";
+		return "showIncidents";
 
 	}
 }
