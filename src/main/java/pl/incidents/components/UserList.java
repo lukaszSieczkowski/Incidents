@@ -11,13 +11,12 @@ import pl.incidents.model.Incident;
 import pl.incidents.model.User;
 
 @Component
-@Scope(scopeName = WebApplicationContext.SCOPE_REQUEST, proxyMode = ScopedProxyMode.TARGET_CLASS)
+@Scope(scopeName = WebApplicationContext.SCOPE_SESSION, proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class UserList {
 
 	private List<User> users;
 
 	public UserList(List<User> users) {
-		super();
 		this.users = users;
 	}
 

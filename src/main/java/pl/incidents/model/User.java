@@ -1,13 +1,17 @@
 package pl.incidents.model;
 
 import java.io.Serializable;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.context.annotation.Scope;
@@ -40,7 +44,8 @@ public class User implements Serializable {
 	private String surname;
 	@Column(name = "userActive", nullable = false)
 	private UserActive userActive;
-
+	@OneToMany(mappedBy="user",fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+	private List<Incident> incidents;
 	
 	public User(){
 		
@@ -53,6 +58,7 @@ public class User implements Serializable {
 		this.name = name;
 		this.surname = surname;
 		this.userActive=userActive;
+	
 	}
 
 	public long getId() {
@@ -87,8 +93,6 @@ public class User implements Serializable {
 		this.userType = userType;
 	}
 
-
-
 	public String getName() {
 		return name;
 	}
@@ -104,15 +108,29 @@ public class User implements Serializable {
 	public void setSurname(String surname) {
 		this.surname = surname;
 	}
-
+	
+	public UserActive getUserActive() {
+		return userActive;
+	}
+	public void setUserActive(UserActive userActive) {
+		this.userActive = userActive;
+	}
+	public List<Incident> getIncidents() {
+		return incidents;
+	}
+	public void setIncidents(List<Incident> incidents) {
+		this.incidents = incidents;
+	}
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", email=" + email + ", password=" + password + ", userType=" + userType + ", name="
-				+ name + ", surname=" + surname + ", userActive=" + userActive + "]";
+				+ name + ", surname=" + surname + ", userActive=" + userActive + ", incidents=" + incidents + "]";
 	}
+
+	
 
 	
 }

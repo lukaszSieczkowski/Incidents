@@ -1,6 +1,7 @@
 package pl.incidents.dao;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -10,7 +11,7 @@ import javax.persistence.Persistence;
 
 import javax.persistence.TypedQuery;
 
-
+import pl.incidents.model.Incident;
 import pl.incidents.model.User;
 
 public class UserDaoImplementation implements UserDao {
@@ -27,12 +28,18 @@ public class UserDaoImplementation implements UserDao {
 	}
 
 	@Override
-	public List<User> getUsers() {
+	public ArrayList<User> getUsers() {
+	
 		EntityManagerFactory emFactory = Persistence.createEntityManagerFactory("myPersistanceUnit");
 		EntityManager entityManager = emFactory.createEntityManager();
+	
 		TypedQuery<User> query = entityManager.createQuery("SELECT c FROM User c", User.class);
-		List<User> resultList = query.getResultList();
+		ArrayList<User> resultList = (ArrayList<User>) query.getResultList();
+		
 		return resultList;
+	
 	}
 
+	
+	
 }

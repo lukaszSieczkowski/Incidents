@@ -1,9 +1,11 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
+
+
 <%@ page contentType="text/html;charset=UTF-8" language="java"
 	isELIgnored="false"%>
 	
-<c:set var="users" value="${users}" scope="page" />	
+<c:set var="users" value="${users}" scope="session"/>	
 <c:set var="user" value="${user}" scope="session" />	
 <c:set var="date" value="${date}" scope="session" />
 		
@@ -73,16 +75,16 @@
 					<th>Statistics</th> 				
 					<th>Cancel Password</th> 
 				</tr>
-					
-				<c:forEach var="user" items="${users}" varStatus="loop">
+			
+				<c:forEach var="user_temp" items="${users}" varStatus="loop">
 					
 				<tr>
 					<td>${loop.index+1}</td>
-					<td class="cell"><c:out value="${user.name}"/>
-									<c:out value="${user.surname}"/>
-					<td class="cell"><c:out value="${user.userType}"/></td>
-					<td class="cell"><c:out value="${user.userActive}"/>......</td>
-					<c:set var="a" value="${user.id}" />
+					<td class="cell"><c:out value="${user_temp.name}"/>
+									<c:out value="${user_temp.surname}"/>
+					<td class="cell"><c:out value="${user_temp.userType}"/></td>
+					<td class="cell"><c:out value="${user_temp.userActive}"/>......</td>
+					<c:set var="a" value="${user_temp.id}" />
 					<td class="cell">
 						<a href ="showIncident?param=<c:out value="${a}"/>">Change Activity Type</a>
 					</td>
@@ -94,6 +96,7 @@
 					</td>
 				</tr>
 				</c:forEach>
+			
 			</table>
 		</div>
 	</div>

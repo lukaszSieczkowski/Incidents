@@ -128,60 +128,77 @@
 		<div class="col-sm-12  ">
 			<table class="table table-condensed ">
 				<tr>
-					<th class="cell">No.</th>
-					<th>
-						<span class="nowrap">Incident Date ​ 
-							 <a href="sortByIncidentDateDesc">&#8679;</a>
-							 <a href="sortByIncidentDateAsc">&#8681;</a>
+					<th id="id">No.</th>
+					<th class="date" ><div>
+					<span class="nowrap">Incident  
+							 <a href="sortByIncidentDateDesc">&uarr;</a>
+							 <a href="sortByIncidentDateAsc"> &darr;</a>
 						</span>
+					</div>
+					<div>Date ​</div>
+						
 					</th> 
 					<th>
 						<span class="nowrap">Area ​ 
-							 <a href="sortByAreaDesc">&#8679;</a>
-							 <a href="sortByAreaAsc">&#8681;</a>
+							 <a href="sortByAreaDesc">&uarr;</a>
+							 <a href="sortByAreaAsc"> &darr;</a>
 						</span>
 					</th>
 					<th>Exact location</th>
 					<th>
 						<span class="nowrap">Event Type ​ 
-							 <a href="sortByEventDesc">&#8679;</a>
-							 <a href="sortByEventAsc">&#8681;</a>
+							 <a href="sortByEventDesc">&uarr;</a>
+							 <a href="sortByEventAsc"> &darr;</a>
 						</span>
 					</th> 					
 					<th>
 						<span class="nowrap">Personel
-							 <a href="sortByPersonelDesc">&#8679;</a>
-							 <a href="sortByPersonelAsc">&#8681;</a>
+							 <a href="sortByPersonelDesc">&uarr;</a>
+							 <a href="sortByPersonelAsc"> &darr;</a>
 						</span>
 					</th> 
 					<th>Details of Safety</th>
 					<th>Action Taken</th> 
-					<th>Supervisior Informed</th>
-					<th>
+					<th id="supervisor">
+						<div>
+							<span class="nowrap">Supervisor  
+								<a href="sortBySupervisorInfDesc">&uarr;</a>
+								<a href="sortBySupervisorInflAsc"> &darr;</a>
+							</span>
+						</div>
+						<div>informed</div>
+					</th> 
+					<th id="reportedBy">
 						<span class="nowrap">Reported by
-							 <a href="sortByReporterlDesc">&#8679;</a>
-							 <a href="sortByReporterlAsc">&#8681;</a>
+							 <a href="sortByReporterlDesc">&uarr;</a>
+							 <a href="sortByReporterlAsc"> &darr;</a>
 						</span>
 					</th> 
-					<th>Reporting Date</th>
-					<th>Show Details</th>
+					<th class="date" ><div>
+					<span class="nowrap">Reporting 
+							 <a href="sortByReportingDateDesc">&uarr;</a>
+							 <a href="sortByReportingDateAsc"> &darr;</a>
+						</span>
+					</div>
+					<div>Date ​</div>
+					<th id="details"><div>Show</div><div> Details</div></th>
 				</tr>
 					
 				<c:forEach var="incident" items="${incidents}" varStatus="loop">
 					
 				<tr>
 					<td>${loop.index+1}</td>
-					<td class="cell"><c:out value="${fn:substring(incident.incidentDate, 0, 10)}"/></br>
+					<td ><c:out value="${fn:substring(incident.incidentDate, 0, 10)}"/></br>
 									<c:out value="${fn:substring(incident.incidentDate, 11,16)}"/></td>
-					<td class="cell"><c:out value="${incident.area}"/></td>
-					<td class="cell"><c:out value="${fn:substring(incident.location, 0, 80)}"/>......</td>
-					<td class="cell"><c:out value="${incident.typeOfObservation}"/></td>
-					<td class="cell"><c:out value="${incident.cathegoryOfPersonel}"/></td>
-					<td class="cell"><c:out value="${fn:substring(incident.details, 0, 80)}"/>......</td>
-					<td class="cell"><c:out value="${fn:substring(incident.action, 0, 80)}"/>......</td> 
+					<td><c:out value="${incident.area}"/></td>
+					<td><c:out value="${fn:substring(incident.location, 0, 80)}"/>......</td>
+					<td><c:out value="${incident.typeOfObservation}"/></td>
+					<td><c:out value="${incident.cathegoryOfPersonel}"/></td>
+					<td><c:out value="${fn:substring(incident.details, 0, 80)}"/>......</td>
+					<td><c:out value="${fn:substring(incident.action, 0, 80)}"/>......</td> 
 					<td> <c:out value="${incident.supervisorInformed}"/></td>
-					<td class="cell">Reported by...</td>
-					<td class="cell"><c:out value="${fn:substring(incident.reportingDate, 0, 10)}"/>
+					<td>Reported by...</td>
+					<td><c:out value="${fn:substring(incident.reportingDate, 0, 10)}"/>
 									<c:out value="${fn:substring(incident.reportingDate, 11,16)}"/></td>
 									 
 					<c:set var="a" value="${incident.id}" />

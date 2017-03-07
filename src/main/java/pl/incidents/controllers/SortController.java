@@ -110,6 +110,54 @@ public class SortController {
 		model.addAttribute("incidents", incidentList.getIncidents());
 		return "showIncidents";
 	}
+	@RequestMapping("/sortBySupervisorInfDesc")
+	public String sortBySupervisorInflDesc(Model model) {
+		List<Incident> incidents = incidentList.getIncidents();
+		incidents = incidents.stream()
+				.sorted((a, b) -> (a.getSupervisorInformed().compareTo(b.getSupervisorInformed())))
+				.collect(Collectors.toList());
+		incidentList.setIncidents(incidents);
+		model.addAttribute("incidents", incidentList.getIncidents());
+		return "showIncidents";
+	}
+	
+	@RequestMapping("/sortBySupervisorInflAsc")
+	public String sortBySupervisorInflAsc(Model model) {
+		List<Incident> incidents = incidentList.getIncidents();
+		incidents = incidents.stream()
+				.sorted((a, b) -> (a.getSupervisorInformed().compareTo(b.getSupervisorInformed())))
+				.collect(Collectors.toList());
+		Collections.reverse(incidents);
+		incidentList.setIncidents(incidents);
+		model.addAttribute("incidents", incidentList.getIncidents());
+		return "showIncidents";
+	}
+	
+	@RequestMapping("/sortByReportingDateDesc")
+	public String sortByReportingDateDesc(Model model) {
+		List<Incident> incidents = incidentList.getIncidents();
+
+		incidents = incidents.stream().sorted((a, b) -> (a.getIncidentDate().compareTo(b.getIncidentDate())))
+				.collect(Collectors.toList());
+		incidentList.setIncidents(incidents);
+		model.addAttribute("incidents", incidentList.getIncidents());
+		return "showIncidents";
+	}
+
+	@RequestMapping("/sortByReportingDateAsc")
+	public String sortByReportingtDateAsc(Model model) {
+		List<Incident> incidents = incidentList.getIncidents();
+
+		incidents = incidents.stream().sorted((a, b) -> (a.getIncidentDate().compareTo(b.getIncidentDate())))
+				.collect(Collectors.toList());
+		Collections.reverse(incidents);
+
+		incidentList.setIncidents(incidents);
+		model.addAttribute("incidents", incidentList.getIncidents());
+		return "showIncidents";
+	}
+
+	
 	/*
 	 * @RequestMapping("/sortByReporterlDesc") public String
 	 * sortByReporterDesc(Model model){ List<Incident> incidents =

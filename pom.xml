@@ -13,9 +13,10 @@
 		<failOnMissingWebXml>false</failOnMissingWebXml>
 		<spring.version>4.3.0.RELEASE</spring.version>
 		<servlet.version>3.1.0</servlet.version>
-		<hibernate.version>5.2.0.Final</hibernate.version>
+		<hibernate.version>5.2.5.Final</hibernate.version>
 		<mysql.connector.version>5.1.39</mysql.connector.version>
 		<dbcp.version>2.1.1</dbcp.version>
+		<spring.security.version>4.2.0.RELEASE</spring.security.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -64,6 +65,19 @@
 			<artifactId>mysql-connector-java</artifactId>
 			<version>${mysql.connector.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-web</artifactId>
+			<version>${spring.security.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-config</artifactId>
+			<version>${spring.security.version}</version>
+			<scope>runtime</scope>
+		</dependency>
+
+
 	</dependencies>
 	<build>
 		<finalName>Incidents_Repoting_Tool</finalName>

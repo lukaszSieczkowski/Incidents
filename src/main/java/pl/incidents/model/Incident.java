@@ -10,6 +10,8 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.springframework.context.annotation.Scope;
@@ -54,7 +56,9 @@ public class Incident implements Serializable {
 	@Enumerated
 	@Column(name = "supervisor_informed", nullable = false)
 	private SupervisorInformed supervisorInformed;
-	
+	@ManyToOne
+    @JoinColumn(name = "id_user")
+	private User user;
 
 	
 	public Incident() {
@@ -74,8 +78,11 @@ public class Incident implements Serializable {
 		this.details = details;
 		this.action = action;
 		this.supervisorInformed = supervisorInformed;
-		
+		this.user = user;
 	}
+
+	
+
 
 	public long getId() {
 		return id;
@@ -157,6 +164,24 @@ public class Incident implements Serializable {
 		this.supervisorInformed = supervisorInformed;
 	}
 
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	@Override
+	public String toString() {
+		return "Incident [id=" + id + ", incidentDate=" + incidentDate + ", reportingDate=" + reportingDate + ", area="
+				+ area + ", location=" + location + ", typeOfObservation=" + typeOfObservation
+				+ ", cathegoryOfPersonel=" + cathegoryOfPersonel + ", details=" + details + ", action=" + action
+				+ ", supervisorInformed=" + supervisorInformed + ", user=" + user + "]";
+	}
+
+	
+	
 
 
 }

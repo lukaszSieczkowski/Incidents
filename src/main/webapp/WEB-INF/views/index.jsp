@@ -32,17 +32,17 @@
 				<div class="col-md-5 col-md-offset-1 ">
 				<form class="form-horizontal" method="post" action="login">
 					<div class="form-group">
-						<label for="exampleInputEmail1">Email address</label>
+						<label for="username">Email address</label>
 						<div class="input-group">
 							<span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-							<input type="email" class="form-control" name="email" placeholder="Email">
+							<input type="email" class="form-control"id="username" name="username" placeholder="Email">
 						</div>
 					</div>
 					<div class="form-group">
-						<label for="exampleInputPassword1">Password</label>
+						<label for="password">Password</label>
 						<div class="input-group">
 							<span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
-							<input type="password" class="form-control" name="password" placeholder="Password">
+							<input type="password" class="form-control" id="password" name="password" placeholder="Password">
 						</div>
 					</div>
 					<div class="form-group">

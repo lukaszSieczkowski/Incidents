@@ -65,50 +65,50 @@
 		<div class="col-sm-8 ">
 			<table class="table table-bordered">
 				<tr>
-					<td class="cell2"><strong>Incident Date</strong></td>
+					<td ><strong>Incident Date</strong></td>
 					<td><c:set var="date"
 							value="${fn:substring(incident.incidentDate, 0, 10)}" /> <c:out value="${date}" /></td>
 				</tr>
 				<tr>
-					<td class="cell2"><strong>Incident Time</strong></td>
+					<td ><strong>Incident Time</strong></td>
 					<td><c:set var="time" value="${fn:substring(incident.incidentDate, 11, 16)}" /> 
 						<c:out value="${time}" /></td>
 				</tr>
 				<tr>
-					<td class="cell2"><strong>Area</strong></td>
+					<td ><strong>Area</strong></td>
 					<td><c:out value="${incident.area}" /></td>
 				</tr>
 				<tr>
-					<td class="cell2"><strong>Event Type</strong></td>
+					<td ><strong>Event Type</strong></td>
 					<td><c:out value="${incident.typeOfObservation}" /></td>
 				</tr>
 				<tr>
-					<td class="cell2"><strong>Exact Location</strong></td>
+					<td ><strong>Exact Location</strong></td>
 					<td><c:out value="${incident.location}" /></td>
 				</tr>
 				<tr>
-					<td class="cell2"><strong>Cathegory of personel</strong></td>
+					<td ><strong>Cathegory of personel</strong></td>
 					<td><c:out value="${incident.cathegoryOfPersonel}" /></td>
 				</tr>
 				<tr>
-					<td class="cell2"><strong>Event Type</strong></td>
+					<td ><strong>Event Type</strong></td>
 					<td><c:out value="${incident.typeOfObservation}" /></td>
 				</tr>
 				<tr>
-					<td class="cell2"><strong>Details of Safety</strong></td>
+					<td ><strong>Details of Safety</strong></td>
 					<td><c:out value="${incident.details}" /></td>
 				</tr>
 				<tr>
-					<td class="cell2"><strong>Immediate Action
+					<td ><strong>Immediate Action
 							Taken/Recommended</strong></td>
 					<td><c:out value="${incident.action}" /></td>
 				</tr>
 				<tr>
-					<td class="cell2"><strong>Supervisior Informed</strong></td>
+					<td ><strong>Supervisior Informed</strong></td>
 					<td><c:out value="${incident.supervisorInformed}" /></td>
 				</tr>
 				<tr>
-					<td class="cell2"><strong>Incident Reported By</strong></td>
+					<td ><strong>Incident Reported By</strong></td>
 					<td></td>
 				</tr>
 			</table>

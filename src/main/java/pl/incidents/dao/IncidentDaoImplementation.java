@@ -9,10 +9,11 @@ import javax.persistence.Persistence;
 import javax.persistence.TypedQuery;
 
 import pl.incidents.model.Incident;
+import pl.incidents.model.User;
+import pl.incidents.model.enums.UserType;
 
 public class IncidentDaoImplementation implements IncidentDao {
 
-	@Override
 	public void saveIncident(Incident incident) {
 		EntityManagerFactory emFactory = Persistence.createEntityManagerFactory("myPersistanceUnit");
 		EntityManager entityManager = emFactory.createEntityManager();
@@ -23,16 +24,22 @@ public class IncidentDaoImplementation implements IncidentDao {
 		entityManager.close();
 	}
 
-	@Override
-	public List<Incident> getIncidents() {
+	public List<Incident> getIncidents(User user) {
 		EntityManagerFactory emFactory = Persistence.createEntityManagerFactory("myPersistanceUnit");
 		EntityManager entityManager = emFactory.createEntityManager();
-		TypedQuery<Incident> query = entityManager.createQuery("SELECT c FROM Incident c", Incident.class);
+		TypedQuery<Incident> query = null;
+
+		if (user.getUserType().equals(UserType.USER)) {
+			query = entityManager.createQuery("SELECT c FROM Incident c WHERE c.user='" + user.getId() + "'",
+					Incident.class);
+		} else {
+			query = entityManager.createQuery("SELECT c FROM Incident c", Incident.class);
+		}
 		List<Incident> resultList = query.getResultList();
+	
 		return resultList;
 	}
 
-	@Override
 	public Incident getIncident(long id) {
 		EntityManagerFactory emFactory = Persistence.createEntityManagerFactory("myPersistanceUnit");
 		EntityManager em = emFactory.createEntityManager();

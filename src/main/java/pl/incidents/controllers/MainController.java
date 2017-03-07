@@ -16,6 +16,10 @@ import java.util.Optional;
 import java.util.jar.Attributes.Name;
 import java.util.stream.Collectors;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityTransaction;
+import javax.persistence.Persistence;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,16 +58,15 @@ import pl.incidents.utils.PasswordGenerator;
 @Controller
 @SessionAttributes("user")
 public class MainController {
+
 	private IncidentList incidentList;
 	private UserList usersList;
 
 	@Autowired
-	public MainController(IncidentList incidentList,UserList usersList) {
+	public MainController(IncidentList incidentList, UserList usersList) {
 		this.incidentList = incidentList;
 		this.usersList = usersList;
 	}
-
-	
 
 	@RequestMapping("/")
 	public String showMain() {
@@ -71,26 +74,25 @@ public class MainController {
 	}
 
 	@PostMapping("/login")
-	public String showUser(@RequestParam String email, @RequestParam String password, Model model) {
+	public String showUser(@RequestParam String username, @RequestParam String password, Model model) {
 
 		UserDao userDao = new UserDaoImplementation();
 		IncidentDao incidentDao = new IncidentDaoImplementation();
 		ArrayList<User> userList = (ArrayList<User>) userDao.getUsers();
 
-		Optional<User> optionalUser = userList.stream().filter(a -> a.getEmail().equals(email)).findAny();
+		Optional<User> optionalUser = userList.stream().filter(a -> a.getEmail().equals(username)).findAny();
 
 		if (optionalUser.isPresent()) {
 			User user = optionalUser.get();
 			if (user.getPassword().equals(password)) {
-				
 				model.addAttribute("user", user);
-				
+
 				LocalDateTime date = LocalDateTime.now();
 				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 				String formatedDate = date.format(formatter);
 				model.addAttribute("date", formatedDate);
-				
-				List<Incident> incidents = incidentDao.getIncidents();
+
+				List<Incident> incidents = incidentDao.getIncidents(user);
 				incidentList.setIncidents(incidents);
 				model.addAttribute("incidents", incidentList.getIncidents());
 
@@ -107,6 +109,7 @@ public class MainController {
 			return "index";
 		}
 
+		
 	}
 
 	@RequestMapping("/logout")
@@ -135,7 +138,9 @@ public class MainController {
 				EventType.valueOf(typeOfObservation), CathegoryOfPersonel.valueOf(cathegoryOfPersonel), details, action,
 				SupervisorInformed.valueOf(supervisorInformed), user);
 
+
 		incidentDao.saveIncident(incident);
+
 		model.addAttribute("incident", incident);
 
 		return "showIncident";
@@ -158,10 +163,12 @@ public class MainController {
 	}
 
 	@RequestMapping("/showIncidents")
-	public String showIncidents(Model model) {
-		IncidentDao incidentDao = new IncidentDaoImplementation();
-		List<Incident> incidents = incidentDao.getIncidents();
-		incidentList.setIncidents(incidents);
+	public String showIncidents(@ModelAttribute User user,Model model) {
+	IncidentDao incidentDao = new IncidentDaoImplementation();
+	
+		 List<Incident> incidents = incidentDao.getIncidents(user);
+		 System.out.println("incidenrs + "+incidents.get(0).getDetails());
+	 incidentList.setIncidents(incidents);
 
 		model.addAttribute("incidents", incidentList.getIncidents());
 		return "showIncidents";
@@ -173,9 +180,9 @@ public class MainController {
 			@RequestParam String area, @RequestParam String typeOfObservation, @RequestParam String cathegoryOfPersonel,
 			Model model) {
 		CreateDate createDate = new CreateDate();
-		IncidentDao incidentDao = new IncidentDaoImplementation();
-		List<Incident> incidents = incidentDao.getIncidents();
-		incidentList.setIncidents(incidents);
+		IncidentDaoImplementation incidentDao = new IncidentDaoImplementation();
+		// List<Incident> incidents = incidentDao.getIncidents();
+		// incidentList.setIncidents(incidents);
 
 		List<Incident> limitedIncident = incidentList.getIncidents();
 		if (!dateStart.equals("")) {
@@ -209,50 +216,48 @@ public class MainController {
 		return "showIncidents";
 
 	}
-	
+
 	@RequestMapping("/addUser")
-	public String addUser(){
+	public String addUser() {
 		return "addUser";
 	}
-	
+
+	@RequestMapping("/getUsers")
+	public String showUsers(Model model) {
+		UserDao userDao = new UserDaoImplementation();
+		List<User> users = userDao.getUsers();
+
+		usersList.setUsers(users);
+
+		model.addAttribute("users", usersList.getUsers());
+		return "showUsers";
+	}
+
 	@RequestMapping("/saveUser")
-	public String saveUser(@RequestParam String name,@RequestParam String surname, 
-			@RequestParam String email,@RequestParam String userType,Model model){
-		
-		System.out.println("Imi� "+name);
-		System.out.println("Nazwisko "+surname);
+	public String saveUser(@RequestParam String name, @RequestParam String surname, @RequestParam String email,
+			@RequestParam String userType, Model model) {
+
+		System.out.println("Imi� " + name);
+		System.out.println("Nazwisko " + surname);
 		String password;
 		String alert;
 		PasswordGenerator passwordGenerator = new PasswordGenerator();
-		password=passwordGenerator.generatePasword();
-	
-		User user = new User(email,password,UserType.valueOf(userType),name,surname,UserActive.valueOf("ACTIVE"));
+		password = passwordGenerator.generatePasword();
+
+		User user = new User(email, password, UserType.valueOf(userType), name, surname, UserActive.valueOf("ACTIVE"));
 		UserDao userDao = new UserDaoImplementation();
 		userDao.saveUser(user);
-		
+
 		alert = "The user has been saved successfuly !!!";
 		model.addAttribute("alert", alert);
-		
+
 		Mail mail = new Mail();
 		String mailContent = mail.prepareContent(user);
-		String mailSubject =mail.prepareSubject();
+		String mailSubject = mail.prepareSubject();
 		mail.sendMail(user.getEmail(), mailContent, mailSubject);
 		System.out.println(user);
-	
+
 		return "addUser";
 	}
-	
-	@RequestMapping("/getUsers")
-	public String showUsers(Model model){
-		UserDao userDao = new UserDaoImplementation();
-		List<User> users = userDao.getUsers();
-		
-		usersList.setUsers(users);
-		List<User> users2= usersList.getUsers();
-	
-		model.addAttribute("users", usersList);
-		return "showUsers";
-	}
-		
-	}
 
+}

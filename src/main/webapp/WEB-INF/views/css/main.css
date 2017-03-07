@@ -166,12 +166,24 @@ margin-top:10px;
 	background: #ffecb3
 }
 
-.cell{
-	min-width: 10px;
+
+
+#id{
+	min-width: 20px;
 }
 
-.cell2{
-	max-width: 80px;
+
+.date{
+	min-width: 90px;
+}
+#supervisor{
+	min-width: 100px;
+}
+#details{
+	max-width: 70px;
+}
+#reportedBy{
+	min-width: 110px;
 }
 
 .nowrap{
