@@ -8,7 +8,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java"
 	isELIgnored="false"%>
 
-<c:set var="incident" value="${incident}" />
+<c:set var="userWithDetails" value="${userWithDetails}" />
+<c:set var="alert" value="${alert}" />
 <c:set var="user" value="${user}" />
 <c:set var="date" value="${date}" />
 
@@ -33,9 +34,10 @@
 	integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
 	crossorigin="anonymous"></script>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 
- <style type="text/css">
+<style type="text/css">
   	<%@include file="css/main.css" %>
 </style>
 
@@ -43,13 +45,13 @@
 <body>
 
 	<c:if test="${user.userType eq 'USER'}">
-   		<jsp:include page="/WEB-INF/views/fragments/menuUser.jsp"/>
+		<jsp:include page="/WEB-INF/views/fragments/menuUser.jsp" />
 	</c:if>
-	
+
 	<c:if test="${user.userType eq 'ADMIN'}">
-   		<jsp:include page="/WEB-INF/views/fragments/menuAdmin.jsp"/>
+		<jsp:include page="/WEB-INF/views/fragments/menuAdmin.jsp" />
 	</c:if>
-	
+
 	<div class="col-sm-12">
 		<div class="col-sm-2 ">
 			<div class="alert alert-warning" role="alert">
@@ -63,61 +65,47 @@
 			</div>
 		</div>
 		<div class="col-sm-8 ">
+		<div class="form-group">
+					<p class="help-block text-center"><c:out value="${pageScope.alert}"/></p>
+				</div>
 			<table class="table table-bordered">
 				<tr>
-					<td ><strong>Incident Date</strong></td>
-					<td><c:set var="date"
-							value="${fn:substring(incident.incidentDate, 0, 10)}" /> <c:out value="${date}" /></td>
+					<td><strong>Name</strong></td>
+					<td><c:out value="${userWithDetails.name}" /></td>
 				</tr>
 				<tr>
-					<td ><strong>Incident Time</strong></td>
-					<td><c:set var="time" value="${fn:substring(incident.incidentDate, 11, 16)}" /> 
-						<c:out value="${time}" /></td>
+					<td><strong>Surname</strong></td>
+					<td><c:out value="${userWithDetails.surname}" /></td>
 				</tr>
 				<tr>
-					<td ><strong>Area</strong></td>
-					<td><c:out value="${incident.area}" /></td>
+					<td><strong>User Type</strong></td>
+					<td><c:out value="${userWithDetails.userType}" /></td>
 				</tr>
 				<tr>
-					<td ><strong>Event Type</strong></td>
-					<td><c:out value="${incident.typeOfObservation}" /></td>
+					<td><strong>User Active/Inactive</strong></td>
+					<td><c:out value="${userWithDetails.userActive}" /></td>
 				</tr>
 				<tr>
-					<td ><strong>Exact Location</strong></td>
-					<td><c:out value="${incident.location}" /></td>
-				</tr>
-				<tr>
-					<td ><strong>Cathegory of personel</strong></td>
-					<td><c:out value="${incident.cathegoryOfPersonel}" /></td>
-				</tr>
-				<tr>
-					<td ><strong>Event Type</strong></td>
-					<td><c:out value="${incident.typeOfObservation}" /></td>
-				</tr>
-				<tr>
-					<td ><strong>Details of Safety</strong></td>
-					<td><c:out value="${incident.details}" /></td>
-				</tr>
-				<tr>
-					<td ><strong>Immediate Action
-							Taken/Recommended</strong></td>
-					<td><c:out value="${incident.action}" /></td>
-				</tr>
-				<tr>
-					<td ><strong>Supervisior Informed</strong></td>
-					<td><c:out value="${incident.supervisorInformed}" /></td>
-				</tr>
-				<tr>
-					<td ><strong>Incident Reported By</strong></td>
+					<td><strong>Actions</strong></td>
 					<td>
-						<c:out value="${incident.user.name}"/> 
-						<c:out value="${incident.user.surname}"/> 
+						<div>
+
+							<a href="changeUserType?param=<c:out value="${userWithDetails.id}"/>"><button  type="submit"
+							class="btn btn-warning btn-lg smallButton">Change User Type</button></a>
+			
+							<a href="changeUserActivity?param=<c:out value="${userWithDetails.id}"/>"><button  type="submit"
+							class="btn btn-warning btn-lg smallButton">Activate/Deactivate User</button></a>
+				
+							<a href="resetUserPassword?param=<c:out value="${userWithDetails.id}"/>"><button   type="submit"
+							class="btn btn-warning btn-lg smallButton">Reset Password</button></a>
+						</div>
 					</td>
 				</tr>
 			</table>
 			<div>
-			<a href="showIncidents"><button id="go_back_button" type="submit" class="btn btn-warning btn-lg " >Go back</button></a>
-		</div>
+				<a href="getUsers"><button id="go_back_button" type="submit"
+						class="btn btn-warning btn-lg ">Go back</button></a>
+			</div>
 		</div>
 	</div>
 </body>

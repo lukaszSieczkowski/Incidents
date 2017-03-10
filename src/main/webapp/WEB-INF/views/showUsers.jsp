@@ -38,16 +38,16 @@
 </head>
 <body>
 
-	<c:if test="${user.userType == 'USER'}">
+	<c:if test="${user.userType eq 'USER'}">
    		<jsp:include page="/WEB-INF/views/fragments/menuUser.jsp"/>
 	</c:if>
 	
-	<c:if test="${user.userType == 'ADMIN'}">
+	<c:if test="${user.userType eq 'ADMIN'}">
    		<jsp:include page="/WEB-INF/views/fragments/menuAdmin.jsp"/>
 	</c:if>
 	
 		<div class="col-sm-2 ">
-			<div class="alert alert-warning" role="alert"  accept-charset="UTF-8"/>
+			<div class="alert alert-warning">
 				<strong>User:</strong> <c:out value="${user.name}"/> <c:out value="${user.surname}"/> </br> <strong>Role:</strong> <c:out value="${user.userType}"/></br>
 				 <strong>Date:</strong> <c:out value="${date}"/>
 			</div>
@@ -55,44 +55,48 @@
 		
 		<div class="col-sm-8 ">
 			<div class="col-sm-12  ">
+			
 			<table class="table table-condensed ">
 				<tr>
 					<th class="cell">No.</th>
 					<th>
 						<span class="nowrap">Name Surname 
-							 <a href="#">&#8679;</a>
-							 <a href="#">&#8681;</a>
+							 <a href="sortByUserSurname?param=desc">&uarr;</a>
+							 <a href="sortByUserSurname?param=asc">&darr;</a>
 						</span>
 					</th> 
 					<th>
 						<span class="nowrap">User Type
-							 <a href="*">&#8679;</a>
-							 <a href="#">&#8681;</a>
+							  <a href="sortByUserType?param=desc">&uarr;</a>
+							 <a href="sortByUserType?param=asc">&darr;</a>
 						</span>
 					</th>
-					<th>User Active/Inactive</th>
-					<th>Change Activity Type</th>
+					<th>
+						<span class="nowrap">User Active/Inactiv
+							  <a href="sortByUserActive?param=desc">&uarr;</a>
+							  <a href="sortByUserActive?param=asc">&darr;</a>
+						</span>
+					</th>
+			
 					<th>Statistics</th> 				
-					<th>Cancel Password</th> 
+					<th>Show Details</th> 
 				</tr>
 			
 				<c:forEach var="user_temp" items="${users}" varStatus="loop">
 					
 				<tr>
 					<td>${loop.index+1}</td>
-					<td class="cell"><c:out value="${user_temp.name}"/>
+					<td><c:out value="${user_temp.name}"/>
 									<c:out value="${user_temp.surname}"/>
-					<td class="cell"><c:out value="${user_temp.userType}"/></td>
-					<td class="cell"><c:out value="${user_temp.userActive}"/>......</td>
+					<td><c:out value="${user_temp.userType}"/></td>
+					<td><c:out value="${user_temp.userActive}"/>......</td>
 					<c:set var="a" value="${user_temp.id}" />
-					<td class="cell">
-						<a href ="showIncident?param=<c:out value="${a}"/>">Change Activity Type</a>
+					<td>
+						<a href ="showUsersIncidents?param=<c:out value="${a}"/>">show Statistics</a>
 					</td>
-					<td class="cell">
-						<a href ="showIncident?param=<c:out value="${a}"/>">Statistics...</a>
-					</td>
-					<td class="cell">
-						<a href ="showIncident?param=<c:out value="${a}"/>">Cancel pass...</a>
+					
+					<td>
+						<a href ="showUserDetails?param=<c:out value="${a}"/>">Show User Details</a>
 					</td>
 				</tr>
 				</c:forEach>

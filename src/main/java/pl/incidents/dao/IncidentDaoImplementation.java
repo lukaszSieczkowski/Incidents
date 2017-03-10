@@ -1,5 +1,6 @@
 package pl.incidents.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -27,24 +28,37 @@ public class IncidentDaoImplementation implements IncidentDao {
 	public List<Incident> getIncidents(User user) {
 		EntityManagerFactory emFactory = Persistence.createEntityManagerFactory("myPersistanceUnit");
 		EntityManager entityManager = emFactory.createEntityManager();
+
 		TypedQuery<Incident> query = null;
+		List<Object[]> list = null;
+		List<Incident> resultList = new ArrayList<>();
 
 		if (user.getUserType().equals(UserType.USER)) {
-			query = entityManager.createQuery("SELECT c FROM Incident c WHERE c.user='" + user.getId() + "'",
-					Incident.class);
+			list = entityManager
+					.createQuery(
+							"SELECT d, m  FROM User d, Incident m WHERE d = m.user AND m.user='" + user.getId() + "'")
+					.getResultList();
 		} else {
-			query = entityManager.createQuery("SELECT c FROM Incident c", Incident.class);
+			list = entityManager.createQuery("SELECT d, m  FROM User d, Incident m WHERE d = m.user").getResultList();
 		}
-		List<Incident> resultList = query.getResultList();
-	
+
+		for (Object[] p : list) {
+			User userFromDB = (User) p[0];
+			Incident incidentFromDB = (Incident) p[1];
+			incidentFromDB.setUser(userFromDB);
+			resultList.add(incidentFromDB);
+		}
+
 		return resultList;
 	}
 
 	public Incident getIncident(long id) {
+		
 		EntityManagerFactory emFactory = Persistence.createEntityManagerFactory("myPersistanceUnit");
 		EntityManager em = emFactory.createEntityManager();
 		Incident incident = em.find(Incident.class, id);
 		em.close();
+		
 		return incident;
 	}
 }

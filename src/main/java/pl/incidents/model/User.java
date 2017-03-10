@@ -44,21 +44,20 @@ public class User implements Serializable {
 	private String surname;
 	@Column(name = "userActive", nullable = false)
 	private UserActive userActive;
-	@OneToMany(mappedBy="user",fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private List<Incident> incidents;
-	
-	public User(){
-		
+
+	public User() {
+
 	}
-	public User( String email, String password, UserType userType, String name,
-			String surname, UserActive userActive) {
+
+	public User(String email, String password, UserType userType, String name, String surname, UserActive userActive) {
 		this.email = email;
 		this.password = password;
 		this.userType = userType;
 		this.name = name;
 		this.surname = surname;
-		this.userActive=userActive;
-	
+		this.userActive = userActive;
 	}
 
 	public long getId() {
@@ -108,29 +107,31 @@ public class User implements Serializable {
 	public void setSurname(String surname) {
 		this.surname = surname;
 	}
-	
+
 	public UserActive getUserActive() {
 		return userActive;
 	}
+
 	public void setUserActive(UserActive userActive) {
 		this.userActive = userActive;
 	}
+
 	public List<Incident> getIncidents() {
 		return incidents;
 	}
+
 	public void setIncidents(List<Incident> incidents) {
 		this.incidents = incidents;
 	}
+
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
+
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", email=" + email + ", password=" + password + ", userType=" + userType + ", name="
-				+ name + ", surname=" + surname + ", userActive=" + userActive + ", incidents=" + incidents + "]";
+				+ name + ", surname=" + surname + ", userActive=" + userActive + "]";
 	}
 
-	
-
-	
 }

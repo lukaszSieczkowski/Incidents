@@ -48,20 +48,19 @@
 </head>
 <body>
 
-	<c:if test="${user.userType == 'USER'}">
+	<c:if test="${user.userType eq 'USER'}">
    		<jsp:include page="/WEB-INF/views/fragments/menuUser.jsp"/>
 	</c:if>
 	
-	<c:if test="${user.userType == 'ADMIN'}">
+	<c:if test="${user.userType eq 'ADMIN'}">
    		<jsp:include page="/WEB-INF/views/fragments/menuAdmin.jsp"/>
 	</c:if>
-	
-		<div class="col-sm-2 ">
-			<div class="alert alert-warning" role="alert"  accept-charset="UTF-8"/>
-				<strong>User:</strong> <c:out value="${user.name}"/> <c:out value="${user.surname}"/> </br> <strong>Role:</strong> <c:out value="${user.userType}"/></br>
-				 <strong>Date:</strong> <c:out value="${date}"/>
-			</div>
+	<div class="col-sm-2 ">
+		<div class="alert alert-warning" role="alert"  accept-charset="UTF-8"/>
+			<strong>User:</strong> <c:out value="${user.name}"/> <c:out value="${user.surname}"/> </br> <strong>Role:</strong> <c:out value="${user.userType}"/></br>
+			<strong>Date:</strong> <c:out value="${date}"/>
 		</div>
+	</div>
 		<div class="col-sm-4 ">
 			<form  method="post" action="saveUser" >
 				<div class="form-group">

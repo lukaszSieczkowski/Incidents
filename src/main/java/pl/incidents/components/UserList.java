@@ -7,7 +7,6 @@ import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
 
-import pl.incidents.model.Incident;
 import pl.incidents.model.User;
 
 @Component
@@ -27,5 +26,5 @@ public class UserList {
 	public void setUsers(List<User> users) {
 		this.users = users;
 	}
-	
+
 }

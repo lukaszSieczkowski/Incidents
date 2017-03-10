@@ -46,11 +46,11 @@
 </head>
 <body>
 
-	<c:if test="${user.userType == 'USER'}">
+	<c:if test="${user.userType eq 'USER'}">
    		<jsp:include page="/WEB-INF/views/fragments/menuUser.jsp"/>
 	</c:if>
 	
-	<c:if test="${user.userType == 'ADMIN'}">
+	<c:if test="${user.userType eq 'ADMIN'}">
    		<jsp:include page="/WEB-INF/views/fragments/menuAdmin.jsp"/>
 	</c:if>
 	
@@ -138,9 +138,9 @@
 			</div>
 			<div class="col-sm-4 col-sm-offset-1 ">
 				<div class="form-group">
-					<label for="details">Details of Safety
+					<label for="safetyDetails">Details of Safety
 						Observation</label>
-					<textarea class="form-control" rows="5" id="details" required name="details"></textarea>
+					<textarea class="form-control" rows="5" id="safetyDetails" required name="details"></textarea>
 				</div>
 			</div>
 			<div class="col-sm-4 col-sm-offset-1 ">

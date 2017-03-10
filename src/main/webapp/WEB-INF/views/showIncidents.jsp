@@ -63,11 +63,11 @@
 
 </head>
 <body>
-	<c:if test="${user.userType == 'USER'}">
+	<c:if test="${user.userType eq 'USER'}">
    		<jsp:include page="/WEB-INF/views/fragments/menuUser.jsp"/>
 	</c:if>
 	
-	<c:if test="${user.userType == 'ADMIN'}">
+	<c:if test="${user.userType eq 'ADMIN'}">
    		<jsp:include page="/WEB-INF/views/fragments/menuAdmin.jsp"/>
 	</c:if>
 	
@@ -79,7 +79,7 @@
 				<strong>Date:</strong> <c:out value="${date}"/>
 			</div>
 		</div>
-		<form  method="post" action="filter">
+		<form  method="post" action="filterIncidents">
 			<div class="col-sm-2 ">
 				<div class="form-group">
 					<label for="datepicker">Observation Date</label> 
@@ -94,7 +94,7 @@
 				<div class="form-group">
 					<label for="place">Area</label> 
 					<select class="form-control" id="place" name="area">
-						<option value="">----- Select one -----</option>
+						<option value="">--------- All ---------</option>
 						<option value="OFFICE">Office</option>
 						<option value="WORKSHOP">Workshop</option>
 						<option value="PARK_LOOT">Park Loot</option>
@@ -104,7 +104,7 @@
 				<div class="form-group">
 					<label for="eventType">Event Type</label> 
 					<select class="form-control" id="evenType"  name="typeOfObservation">
-						<option value="">----- Select one -----</option>
+						<option value="">--------- All ---------</option>
 						<option value="UNSAFE_ACT">Unsafe Act</option>
 						<option value="UNSAFE_CONDITIONS">Unsafe Conditions</option>
 						<option value="SAFE_BEHAVIOURS">Safe Behaviours</option>
@@ -115,7 +115,7 @@
 				<div class="form-group">
 					<label for="personel">Cathegory of Personeel</label> <select
 						class="form-control" id="personel" name="cathegoryOfPersonel">
-						<option value="">----- Select one -----</option>
+						<option value="">--------- All ---------</option>
 						<option value="OWN">Own</option>
 						<option value="CONTRACTOR">Contractor</option>
 						<option value="CLIENT">Client</option>
@@ -131,8 +131,8 @@
 					<th id="id">No.</th>
 					<th class="date" ><div>
 					<span class="nowrap">Incident  
-							 <a href="sortByIncidentDateDesc">&uarr;</a>
-							 <a href="sortByIncidentDateAsc"> &darr;</a>
+							 <a href="sortByIncidentDate?param=desc">&uarr;</a>
+							 <a href="sortByIncidentDate?param=asc"> &darr;</a>
 						</span>
 					</div>
 					<div>Date ​</div>
@@ -140,21 +140,21 @@
 					</th> 
 					<th>
 						<span class="nowrap">Area ​ 
-							 <a href="sortByAreaDesc">&uarr;</a>
-							 <a href="sortByAreaAsc"> &darr;</a>
+							 <a href="sortByArea?param=desc">&uarr;</a>
+							 <a href="sortByAreaAsc?param=asc"> &darr;</a>
 						</span>
 					</th>
 					<th>Exact location</th>
 					<th>
 						<span class="nowrap">Event Type ​ 
-							 <a href="sortByEventDesc">&uarr;</a>
-							 <a href="sortByEventAsc"> &darr;</a>
+							 <a href="sortByEvent?param=desc">&uarr;</a>
+							 <a href="sortByEvent?param=asc"> &darr;</a>
 						</span>
 					</th> 					
-					<th>
+					<th id="personel">
 						<span class="nowrap">Personel
-							 <a href="sortByPersonelDesc">&uarr;</a>
-							 <a href="sortByPersonelAsc"> &darr;</a>
+							 <a href="sortByPersonel?param=desc">&uarr;</a>
+							 <a href="sortByPersonel?param=asc"> &darr;</a>
 						</span>
 					</th> 
 					<th>Details of Safety</th>
@@ -162,22 +162,22 @@
 					<th id="supervisor">
 						<div>
 							<span class="nowrap">Supervisor  
-								<a href="sortBySupervisorInfDesc">&uarr;</a>
-								<a href="sortBySupervisorInflAsc"> &darr;</a>
+								<a href="sortBySupervisorInf?param=desc">&uarr;</a>
+								<a href="sortBySupervisorInf?param=asc"> &darr;</a>
 							</span>
 						</div>
 						<div>informed</div>
 					</th> 
 					<th id="reportedBy">
 						<span class="nowrap">Reported by
-							 <a href="sortByReporterlDesc">&uarr;</a>
-							 <a href="sortByReporterlAsc"> &darr;</a>
+							 <a href="sortByReporter?param=desc">&uarr;</a>
+							 <a href="sortByReporter?param=asc"> &darr;</a>
 						</span>
 					</th> 
 					<th class="date" ><div>
 					<span class="nowrap">Reporting 
-							 <a href="sortByReportingDateDesc">&uarr;</a>
-							 <a href="sortByReportingDateAsc"> &darr;</a>
+							 <a href="sortByReportingDate?param=desc">&uarr;</a>
+							 <a href="sortByReportingDate?param=asc"> &darr;</a>
 						</span>
 					</div>
 					<div>Date ​</div>
@@ -197,7 +197,10 @@
 					<td><c:out value="${fn:substring(incident.details, 0, 80)}"/>......</td>
 					<td><c:out value="${fn:substring(incident.action, 0, 80)}"/>......</td> 
 					<td> <c:out value="${incident.supervisorInformed}"/></td>
-					<td>Reported by...</td>
+					<td>
+						<c:out value="${incident.user.name}"/> 
+						<c:out value="${incident.user.surname}"/> 
+					</td>
 					<td><c:out value="${fn:substring(incident.reportingDate, 0, 10)}"/>
 									<c:out value="${fn:substring(incident.reportingDate, 11,16)}"/></td>
 									 

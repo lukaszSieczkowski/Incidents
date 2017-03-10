@@ -1,29 +1,16 @@
 package pl.incidents.controllers;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Modifier;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collections;
+import java.util.Comparator;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.jar.Attributes.Name;
-import java.util.stream.Collectors;
-
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityTransaction;
-import javax.persistence.Persistence;
-import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -53,6 +40,7 @@ import pl.incidents.model.enums.UserActive;
 import pl.incidents.model.enums.UserType;
 import pl.incidents.utils.CreateDate;
 import pl.incidents.utils.Mail;
+import pl.incidents.utils.MapCreator;
 import pl.incidents.utils.PasswordGenerator;
 
 @Controller
@@ -108,8 +96,6 @@ public class MainController {
 			model.addAttribute("alert", alert);
 			return "index";
 		}
-
-		
 	}
 
 	@RequestMapping("/logout")
@@ -118,6 +104,7 @@ public class MainController {
 		request.removeAttribute("user", WebRequest.SCOPE_SESSION);
 		request.removeAttribute("date", WebRequest.SCOPE_SESSION);
 		request.removeAttribute("incidents", WebRequest.SCOPE_SESSION);
+		
 		return "index";
 	}
 
@@ -132,15 +119,13 @@ public class MainController {
 		LocalDateTime reportingDate = LocalDateTime.now();
 
 		CreateDate createDate = new CreateDate();
-		LocalDateTime incidentDate = createDate.createDateFromRequest(date, hour, minute);
+		LocalDateTime incidentDate = createDate.createDateFromString(date, hour, minute);
 
 		Incident incident = new Incident(incidentDate, reportingDate, Area.valueOf(area), location,
 				EventType.valueOf(typeOfObservation), CathegoryOfPersonel.valueOf(cathegoryOfPersonel), details, action,
 				SupervisorInformed.valueOf(supervisorInformed), user);
 
-
 		incidentDao.saveIncident(incident);
-
 		model.addAttribute("incident", incident);
 
 		return "showIncident";
@@ -148,8 +133,8 @@ public class MainController {
 
 	@RequestMapping("/reportIncident")
 	public String reportIncident() {
+		
 		return "reportIncident";
-
 	}
 
 	@GetMapping("/showIncident")
@@ -158,63 +143,21 @@ public class MainController {
 		Incident incident = incidentDao.getIncident(param);
 
 		model.addAttribute("incident", incident);
+		
 		return "showIncident";
-
 	}
 
 	@RequestMapping("/showIncidents")
-	public String showIncidents(@ModelAttribute User user,Model model) {
-	IncidentDao incidentDao = new IncidentDaoImplementation();
-	
-		 List<Incident> incidents = incidentDao.getIncidents(user);
-		 System.out.println("incidenrs + "+incidents.get(0).getDetails());
-	 incidentList.setIncidents(incidents);
+	public String showIncidents(@ModelAttribute User user, Model model) {
+		IncidentDao incidentDao = new IncidentDaoImplementation();
+
+		List<Incident> incidents = incidentDao.getIncidents(user);
+		System.out.println("incidenrs + " + incidents.get(0).getDetails());
+		incidentList.setIncidents(incidents);
 
 		model.addAttribute("incidents", incidentList.getIncidents());
+		
 		return "showIncidents";
-
-	}
-
-	@RequestMapping("/filter")
-	public String showStatistics(@RequestParam String dateStart, @RequestParam String dateEnd,
-			@RequestParam String area, @RequestParam String typeOfObservation, @RequestParam String cathegoryOfPersonel,
-			Model model) {
-		CreateDate createDate = new CreateDate();
-		IncidentDaoImplementation incidentDao = new IncidentDaoImplementation();
-		// List<Incident> incidents = incidentDao.getIncidents();
-		// incidentList.setIncidents(incidents);
-
-		List<Incident> limitedIncident = incidentList.getIncidents();
-		if (!dateStart.equals("")) {
-			LocalDateTime startDate = createDate.createDateFromRequest(dateStart, 0, 0);
-			System.out.println("LOCAL DATE" + startDate);
-			limitedIncident = incidentList.getIncidents().stream().filter(a -> (a.getIncidentDate().isAfter(startDate)))
-					.collect(Collectors.toList());
-		}
-		if (!dateEnd.equals("")) {
-			LocalDateTime endDate = createDate.createDateFromRequest(dateEnd, 0, 0);
-			limitedIncident = limitedIncident.stream().filter(a -> (a.getIncidentDate().isBefore(endDate)))
-					.collect(Collectors.toList());
-		}
-		if (!area.equals("")) {
-			limitedIncident = limitedIncident.stream().filter(a -> a.getArea().equals(Area.valueOf(area)))
-					.collect(Collectors.toList());
-		}
-		if (!typeOfObservation.equals("")) {
-			limitedIncident = limitedIncident.stream()
-					.filter(a -> a.getTypeOfObservation().equals(EventType.valueOf(typeOfObservation)))
-					.collect(Collectors.toList());
-		}
-		if (!cathegoryOfPersonel.equals("")) {
-			limitedIncident = limitedIncident.stream()
-					.filter(a -> a.getCathegoryOfPersonel().equals(CathegoryOfPersonel.valueOf(cathegoryOfPersonel)))
-					.collect(Collectors.toList());
-		}
-
-		incidentList.setIncidents(limitedIncident);
-		model.addAttribute("incidents", incidentList.getIncidents());
-		return "showIncidents";
-
 	}
 
 	@RequestMapping("/addUser")
@@ -230,6 +173,7 @@ public class MainController {
 		usersList.setUsers(users);
 
 		model.addAttribute("users", usersList.getUsers());
+		
 		return "showUsers";
 	}
 
@@ -237,8 +181,6 @@ public class MainController {
 	public String saveUser(@RequestParam String name, @RequestParam String surname, @RequestParam String email,
 			@RequestParam String userType, Model model) {
 
-		System.out.println("Imi� " + name);
-		System.out.println("Nazwisko " + surname);
 		String password;
 		String alert;
 		PasswordGenerator passwordGenerator = new PasswordGenerator();
@@ -252,12 +194,116 @@ public class MainController {
 		model.addAttribute("alert", alert);
 
 		Mail mail = new Mail();
-		String mailContent = mail.prepareContent(user);
-		String mailSubject = mail.prepareSubject();
+		String mailContent = mail.prepareContentNewUser(user);
+		String mailSubject = mail.prepareSubjectNewUser();
 		mail.sendMail(user.getEmail(), mailContent, mailSubject);
-		System.out.println(user);
 
 		return "addUser";
+	}
+
+	@RequestMapping("/showUserDetails")
+	public String showUserDetails(Model model, long param) {
+
+		UserDao userDao = new UserDaoImplementation();
+		User userWithDetails = userDao.getUser(param);
+
+		model.addAttribute("userWithDetails", userWithDetails);
+		
+		return "showUser";
+	}
+
+	@RequestMapping("/changeUserType")
+	public String changeUserType(Model model, long param) {
+		UserDao userDao = new UserDaoImplementation();
+		User userWithDetails = userDao.getUser(param);
+		String userTypeBefore = userWithDetails.getUserType().toString();
+
+		if (userWithDetails.getUserType().equals(UserType.ADMIN)) {
+			userWithDetails.setUserType(UserType.USER);
+		} else {
+			userWithDetails.setUserType(UserType.ADMIN);
+		}
+		String userTypeAfter = userWithDetails.getUserType().toString();
+		userDao.updateUser(userWithDetails);
+
+		String alert = "User type has been changed from " + userTypeBefore + " to " + userTypeAfter
+				+ "  successfuly !!!";
+		model.addAttribute("userWithDetails", userWithDetails);
+		model.addAttribute("alert", alert);
+		
+		return "showUser";
+	}
+
+	@RequestMapping("/changeUserActivity")
+	public String changeUserActivity(Model model, long param) {
+		UserDao userDao = new UserDaoImplementation();
+		User userWithDetails = userDao.getUser(param);
+		String userActivityBefore = userWithDetails.getUserActive().toString();
+
+		if (userWithDetails.getUserActive().equals(UserActive.ACTIVE)) {
+			userWithDetails.setUserActive(UserActive.INACTIVE);
+		} else {
+			userWithDetails.setUserActive(UserActive.ACTIVE);
+		}
+		String userActivityAfter = userWithDetails.getUserActive().toString();
+		userDao.updateUser(userWithDetails);
+
+		String alert = "User type has been changed from " + userActivityBefore + " to " + userActivityAfter
+				+ "  successfuly !!!";
+		model.addAttribute("userWithDetails", userWithDetails);
+		model.addAttribute("alert", alert);
+		
+		return "showUser";
+	}
+
+	@RequestMapping("/resetUserPassword")
+	public String resetPassword(Model model, long param) {
+		UserDao userDao = new UserDaoImplementation();
+		User userWithDetails = userDao.getUser(param);
+
+		String password;
+		String alert;
+
+		PasswordGenerator passwordGenerator = new PasswordGenerator();
+		password = passwordGenerator.generatePasword();
+		userWithDetails.setPassword(password);
+		userDao.updateUser(userWithDetails);
+
+		Mail mail = new Mail();
+		String mailContent = mail.prepareContentNewPassword(userWithDetails);
+		String mailSubject = mail.prepareSubjectNewPassword();
+		mail.sendMail(userWithDetails.getEmail(), mailContent, mailSubject);
+
+		alert = "Tha password for " + userWithDetails.getName() + " " + userWithDetails.getSurname()
+				+ " has been changed  successfuly !!!";
+		model.addAttribute("userWithDetails", userWithDetails);
+		model.addAttribute("alert", alert);
+		
+		return "showUser";
+	}
+
+	@RequestMapping("/showStatistics")
+	public String showStatistics(@RequestParam String chartForm, Model model) {
+
+		List<Incident> incidents = incidentList.getIncidents();
+
+		Incident first = Collections.min(incidents, Comparator.comparing(c -> c.getIncidentDate()));
+		Incident last = Collections.max(incidents, Comparator.comparing(c -> c.getIncidentDate()));
+
+		MapCreator mapCreator = new MapCreator();
+		Map<String, Long> map = mapCreator.createMapForArea(incidents);
+
+		CreateDate createDate = new CreateDate();
+
+		String startDate = createDate.createDateToString(first.getIncidentDate());
+		String endDate = createDate.createDateToString(last.getIncidentDate());
+
+		model.addAttribute("startDate", startDate);
+		model.addAttribute("endDate", endDate);
+		model.addAttribute("chartForm", chartForm);
+		model.addAttribute("map", map);
+		
+		return "showStatistics";
 	}
 
 }

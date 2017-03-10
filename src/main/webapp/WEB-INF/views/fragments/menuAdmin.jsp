@@ -19,14 +19,10 @@
 				<ul class="dropdown-menu">
 					<li><a href="addUser">Add New User</a></li>
 					<li><a href="getUsers">Show Users</a></li>
-					<li><a href="#">Sent Items</a></li>
-					<li class="divider"></li>
-					<li><a href="#">Trash</a></li>
-				</ul></li>
-
+				</ul>
 			<li><a href="reportIncident">Report Incident</a></li>
 			<li><a href="showIncidents">Show Reported Incidents</a></li>
-
+			<li><a href="showStatistics?chartForm=3D_PIE">Show Incidents Statistics</a></li>
 		</ul>
 		<ul class="nav navbar-nav navbar-right">
 			<li><a href="logout"><span

@@ -4,13 +4,27 @@ import java.time.LocalDateTime;
 
 public class CreateDate {
 
-	public LocalDateTime createDateFromRequest(String dateInString, int hour, int min) {
+	public LocalDateTime createDateFromString(String dateInString, int hour, int min) {
 
 		int day = Integer.parseInt(dateInString.substring(0, 2));
+
 		int month = Integer.parseInt(dateInString.substring(3, 5));
 		int year = Integer.parseInt(dateInString.substring(6, 10));
 		LocalDateTime date = LocalDateTime.of(year, month, day, hour, min);
+		
 		return date;
+	}
+
+	public String createDateToString(LocalDateTime localDateTime) {
+		StringBuilder stringBuilder = new StringBuilder();
+
+		stringBuilder.append(localDateTime.toString().substring(8, 10));
+		stringBuilder.append(localDateTime.toString().substring(7, 8));
+		stringBuilder.append(localDateTime.toString().substring(5, 7));
+		stringBuilder.append(localDateTime.toString().substring(4, 5));
+		stringBuilder.append(localDateTime.toString().substring(0, 4));
+
+		return stringBuilder.toString();
 
 	}
 

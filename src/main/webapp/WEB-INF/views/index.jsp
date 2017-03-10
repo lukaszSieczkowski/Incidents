@@ -24,12 +24,12 @@
  >
 	 <div class="container-fluid">
      	<div class = "upper_container">
-			<div class="col-md-5 col-md-offset-1 text-center ">
+			<div class="col-md-5 col-md-offset-3 text-center ">
 				<h1>Incident Reportig Tool</br>
 			</div>  
 		</div>
             <div class="middle_container">
-				<div class="col-md-5 col-md-offset-1 ">
+				<div class="col-md-5 col-md-offset-3 ">
 				<form class="form-horizontal" method="post" action="login">
 					<div class="form-group">
 						<label for="username">Email address</label>

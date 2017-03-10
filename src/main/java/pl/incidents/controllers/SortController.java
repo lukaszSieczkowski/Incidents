@@ -10,170 +10,191 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import pl.incidents.components.IncidentList;
+import pl.incidents.components.UserList;
 import pl.incidents.model.Incident;
+import pl.incidents.model.User;
 
 @Controller
 public class SortController {
 
-	private IncidentList incidentList;
+	private IncidentList incidentsList;
+	private UserList usersList;
 
 	@Autowired
-	public SortController(IncidentList incidentList) {
-		this.incidentList = incidentList;
+	public SortController(IncidentList incidentsList, UserList usersList) {
+		this.incidentsList = incidentsList;
+		this.usersList = usersList;
 	}
 
-	@RequestMapping("/sortByIncidentDateDesc")
-	public String sortByIncudentDateDesc(Model model) {
-		List<Incident> incidents = incidentList.getIncidents();
-
+	@RequestMapping("/sortByIncidentDate")
+	public String sortByIncudentDate(Model model, String param) {
+		
+		List<Incident> incidents = incidentsList.getIncidents();
 		incidents = incidents.stream().sorted((a, b) -> (a.getIncidentDate().compareTo(b.getIncidentDate())))
 				.collect(Collectors.toList());
-		incidentList.setIncidents(incidents);
-		model.addAttribute("incidents", incidentList.getIncidents());
+	
+		if (param.equals("asc")) {
+			Collections.reverse(incidents);
+		}
+		
+		incidentsList.setIncidents(incidents);
+		model.addAttribute("incidents", incidentsList.getIncidents());
+		
 		return "showIncidents";
 	}
 
-	@RequestMapping("/sortByIncidentDateAsc")
-	public String sortByIncudentDateAsc(Model model) {
-		List<Incident> incidents = incidentList.getIncidents();
-
-		incidents = incidents.stream().sorted((a, b) -> (a.getIncidentDate().compareTo(b.getIncidentDate())))
-				.collect(Collectors.toList());
-		Collections.reverse(incidents);
-
-		incidentList.setIncidents(incidents);
-		model.addAttribute("incidents", incidentList.getIncidents());
-		return "showIncidents";
-	}
-
-	@RequestMapping("/sortByAreaDesc")
-	public String sortByAreaDesc(Model model) {
-		List<Incident> incidents = incidentList.getIncidents();
+	@RequestMapping("/sortByArea")
+	public String sortByArea(Model model, String param) {
+		
+		List<Incident> incidents = incidentsList.getIncidents();
 		incidents = incidents.stream().sorted((a, b) -> (a.getArea().compareTo(b.getArea())))
 				.collect(Collectors.toList());
-		incidentList.setIncidents(incidents);
-		model.addAttribute("incidents", incidentList.getIncidents());
+		
+		if (param.equals("asc")) {
+			Collections.reverse(incidents);
+		}
+		
+		incidentsList.setIncidents(incidents);
+		model.addAttribute("incidents", incidentsList.getIncidents());
+		
 		return "showIncidents";
 	}
 
-	@RequestMapping("/sortByAreaAsc")
-	public String sortByAreaAsc(Model model) {
-		List<Incident> incidents = incidentList.getIncidents();
-		incidents = incidents.stream().sorted((a, b) -> (a.getArea().compareTo(b.getArea())))
-				.collect(Collectors.toList());
-		Collections.reverse(incidents);
-		incidentList.setIncidents(incidents);
-		model.addAttribute("incidents", incidentList.getIncidents());
-		return "showIncidents";
-	}
-
-	@RequestMapping("/sortByEventDesc")
-	public String sortByEventDesc(Model model) {
-		List<Incident> incidents = incidentList.getIncidents();
+	@RequestMapping("/sortByEvent")
+	public String sortByEvent(Model model, String param) {
+		
+		List<Incident> incidents = incidentsList.getIncidents();
 		incidents = incidents.stream().sorted((a, b) -> (a.getTypeOfObservation().compareTo(b.getTypeOfObservation())))
 				.collect(Collectors.toList());
-		incidentList.setIncidents(incidents);
-		model.addAttribute("incidents", incidentList.getIncidents());
+		
+		if (param.equals("asc")) {
+			Collections.reverse(incidents);
+		}
+		
+		incidentsList.setIncidents(incidents);
+		model.addAttribute("incidents", incidentsList.getIncidents());
+		
 		return "showIncidents";
 	}
 
-	@RequestMapping("/sortByEventAsc")
-	public String sortByEventAsc(Model model) {
-		List<Incident> incidents = incidentList.getIncidents();
-		incidents = incidents.stream().sorted((a, b) -> (a.getTypeOfObservation().compareTo(b.getTypeOfObservation())))
-				.collect(Collectors.toList());
-		Collections.reverse(incidents);
-		incidentList.setIncidents(incidents);
-		model.addAttribute("incidents", incidentList.getIncidents());
-		return "showIncidents";
-	}
-
-	@RequestMapping("/sortByPersonelDesc")
-	public String sortByPersonelDesc(Model model) {
-		List<Incident> incidents = incidentList.getIncidents();
+	@RequestMapping("/sortByPersonel")
+	public String sortByPersonel(Model model, String param) {
+		
+		List<Incident> incidents = incidentsList.getIncidents();
 		incidents = incidents.stream()
 				.sorted((a, b) -> (a.getCathegoryOfPersonel().compareTo(b.getCathegoryOfPersonel())))
 				.collect(Collectors.toList());
-		incidentList.setIncidents(incidents);
-		model.addAttribute("incidents", incidentList.getIncidents());
+		
+		if (param.equals("asc")) {
+			Collections.reverse(incidents);
+		}
+		
+		incidentsList.setIncidents(incidents);
+		model.addAttribute("incidents", incidentsList.getIncidents());
+		
 		return "showIncidents";
 	}
 
-	@RequestMapping("/sortByPersonelAsc")
-	public String sortByPersoneltAsc(Model model) {
-		List<Incident> incidents = incidentList.getIncidents();
-		incidents = incidents.stream()
-				.sorted((a, b) -> (a.getCathegoryOfPersonel().compareTo(b.getCathegoryOfPersonel())))
-				.collect(Collectors.toList());
-		Collections.reverse(incidents);
-		incidentList.setIncidents(incidents);
-		model.addAttribute("incidents", incidentList.getIncidents());
-		return "showIncidents";
-	}
-	@RequestMapping("/sortBySupervisorInfDesc")
-	public String sortBySupervisorInflDesc(Model model) {
-		List<Incident> incidents = incidentList.getIncidents();
+	@RequestMapping("/sortBySupervisorInf")
+	public String sortBySupervisorInfl(Model model, String param) {
+		
+		List<Incident> incidents = incidentsList.getIncidents();
 		incidents = incidents.stream()
 				.sorted((a, b) -> (a.getSupervisorInformed().compareTo(b.getSupervisorInformed())))
 				.collect(Collectors.toList());
-		incidentList.setIncidents(incidents);
-		model.addAttribute("incidents", incidentList.getIncidents());
-		return "showIncidents";
-	}
-	
-	@RequestMapping("/sortBySupervisorInflAsc")
-	public String sortBySupervisorInflAsc(Model model) {
-		List<Incident> incidents = incidentList.getIncidents();
-		incidents = incidents.stream()
-				.sorted((a, b) -> (a.getSupervisorInformed().compareTo(b.getSupervisorInformed())))
-				.collect(Collectors.toList());
-		Collections.reverse(incidents);
-		incidentList.setIncidents(incidents);
-		model.addAttribute("incidents", incidentList.getIncidents());
-		return "showIncidents";
-	}
-	
-	@RequestMapping("/sortByReportingDateDesc")
-	public String sortByReportingDateDesc(Model model) {
-		List<Incident> incidents = incidentList.getIncidents();
+		
+		if (param.equals("asc")) {
+			Collections.reverse(incidents);
+		}
 
+		incidentsList.setIncidents(incidents);
+		model.addAttribute("incidents", incidentsList.getIncidents());
+		
+		return "showIncidents";
+	}
+
+	@RequestMapping("/sortByReportingDate")
+	public String sortByReportingtDate(Model model, String param) {
+		
+		List<Incident> incidents = incidentsList.getIncidents();
 		incidents = incidents.stream().sorted((a, b) -> (a.getIncidentDate().compareTo(b.getIncidentDate())))
 				.collect(Collectors.toList());
-		incidentList.setIncidents(incidents);
-		model.addAttribute("incidents", incidentList.getIncidents());
+		
+		if (param.equals("asc")) {
+			Collections.reverse(incidents);
+		}
+
+		incidentsList.setIncidents(incidents);
+		model.addAttribute("incidents", incidentsList.getIncidents());
+		
 		return "showIncidents";
 	}
 
-	@RequestMapping("/sortByReportingDateAsc")
-	public String sortByReportingtDateAsc(Model model) {
-		List<Incident> incidents = incidentList.getIncidents();
-
-		incidents = incidents.stream().sorted((a, b) -> (a.getIncidentDate().compareTo(b.getIncidentDate())))
+	@RequestMapping("/sortByReporter")
+	public String sortByReporter(Model model, String param) {
+		
+		List<Incident> incidents = incidentsList.getIncidents();
+		incidents = incidents.stream().sorted((a, b) -> (a.getUser().getSurname().compareTo(b.getUser().getSurname())))
 				.collect(Collectors.toList());
-		Collections.reverse(incidents);
 
-		incidentList.setIncidents(incidents);
-		model.addAttribute("incidents", incidentList.getIncidents());
+		if (param.equals("asc")) {
+			Collections.reverse(incidents);
+		}
+		
+		incidentsList.setIncidents(incidents);
+		model.addAttribute("incidents", incidentsList.getIncidents());
+		
 		return "showIncidents";
 	}
 
-	
-	/*
-	 * @RequestMapping("/sortByReporterlDesc") public String
-	 * sortByReporterDesc(Model model){ List<Incident> incidents =
-	 * incidentList.getIncidents(); incidents=
-	 * incidents.stream().sorted((a,b)->(a.getCathegoryOfPersonel().compareTo(b.
-	 * getCathegoryOfPersonel()))).collect(Collectors.toList());
-	 * incidentList.setIncidents(incidents); model.addAttribute("incidents",
-	 * incidentList.getIncidents()); return "showIncidents"; }
-	 * 
-	 * @RequestMapping("/sortByReporterlAsc") public String
-	 * sortByReportertAsc(Model model){ List<Incident> incidents =
-	 * incidentList.getIncidents(); incidents=
-	 * incidents.stream().sorted((a,b)->(a.getCathegoryOfPersonel().compareTo(b.
-	 * getCathegoryOfPersonel()))).collect(Collectors.toList());
-	 * Collections.reverse(incidents); incidentList.setIncidents(incidents);
-	 * model.addAttribute("incidents", incidentList.getIncidents()); return
-	 * "showIncidents"; }
-	 */
+	@RequestMapping("/sortByUserSurname")
+	public String sortByUserSurnameDesc(Model model, String param) {
+		
+		List<User> users = usersList.getUsers();
+		users = users.stream().sorted((a, b) -> (a.getSurname().compareTo(b.getSurname())))
+				.collect(Collectors.toList());
+		
+		if (param.equals("asc")) {
+			Collections.reverse(users);
+		}
+		
+		usersList.setUsers(users);
+		model.addAttribute("users", usersList.getUsers());
+		
+		return "showUsers";
+	}
+
+	@RequestMapping("/sortByUserType")
+	public String sortByUserType(Model model, String param) {
+		
+		List<User> users = usersList.getUsers();
+		users = users.stream().sorted((a, b) -> (a.getUserType().compareTo(b.getUserType())))
+				.collect(Collectors.toList());
+		
+		if (param.equals("asc")) {
+			Collections.reverse(users);
+		}
+		
+		usersList.setUsers(users);
+		model.addAttribute("users", usersList.getUsers());
+		
+		return "showUsers";
+	}
+
+	@RequestMapping("/sortByUserActive")
+	public String sortByUserActive(Model model, String param) {
+		
+		List<User> users = usersList.getUsers();
+		users = users.stream().sorted((a, b) -> (a.getUserActive().compareTo(b.getUserActive())))
+				.collect(Collectors.toList());
+		
+		if (param.equals("asc")) {
+			Collections.reverse(users);
+		}
+		
+		usersList.setUsers(users);
+		model.addAttribute("users", usersList.getUsers());
+		
+		return "showUsers";
+	}
 }

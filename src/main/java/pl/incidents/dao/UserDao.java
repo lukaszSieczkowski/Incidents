@@ -2,7 +2,6 @@ package pl.incidents.dao;
 
 import java.util.List;
 
-import pl.incidents.model.Incident;
 import pl.incidents.model.User;
 
 public interface UserDao {
@@ -11,8 +10,8 @@ public interface UserDao {
 
 	public List<User> getUsers();
 
-
+	public User getUser(long id);
 	
-
+	public void updateUser(User user);
 	
 }
