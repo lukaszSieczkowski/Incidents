@@ -10,6 +10,7 @@ import javax.persistence.Persistence;
 import javax.persistence.TypedQuery;
 
 import pl.incidents.model.User;
+import pl.incidents.model.enums.UserType;
 
 public class UserDaoImplementation implements UserDao {
 
@@ -38,6 +39,8 @@ public class UserDaoImplementation implements UserDao {
 		return resultList;
 
 	}
+	
+
 
 	public User getUser(long id) {
 		

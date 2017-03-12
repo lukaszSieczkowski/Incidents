@@ -27,6 +27,7 @@ import pl.incidents.model.enums.Area;
 import pl.incidents.model.enums.Cathegory;
 import pl.incidents.model.enums.CathegoryOfPersonel;
 import pl.incidents.model.enums.EventType;
+import pl.incidents.model.enums.IncidentStatus;
 import pl.incidents.utils.CreateDate;
 import pl.incidents.utils.MapCreator;
 
@@ -91,38 +92,41 @@ public class FilterController {
 		CreateDate createDate = new CreateDate();
 		MapCreator mapCreator = new MapCreator();
 		List<Incident> incidents = incidentList.getIncidents();
-
+		List<Incident> approvedIncidents = incidents.stream()
+				.filter(a->a.getIncidentStatus()!=IncidentStatus.NOT_APPROVED).collect(Collectors.toList());
+		
+		
 		Map<String, Long> map = new HashMap<>();
 
 		if (!dateStart.equals("")) {
 			LocalDateTime startDate = createDate.createDateFromString(dateStart, 0, 0);
-			incidents = incidents.stream().filter(a -> a.getIncidentDate().isAfter(startDate))
+			approvedIncidents = incidents.stream().filter(a -> a.getIncidentDate().isAfter(startDate))
 					.collect(Collectors.toList());
 		} else {
-			Incident first = Collections.min(incidents, Comparator.comparing(c -> c.getIncidentDate()));
+			Incident first = Collections.min(approvedIncidents, Comparator.comparing(c -> c.getIncidentDate()));
 			dateStart = createDate.createDateToString(first.getIncidentDate());
 		}
 		if (!dateEnd.equals("")) {
 			LocalDateTime endDate = createDate.createDateFromString(dateEnd, 0, 0);
-			incidents = incidents.stream().filter(a -> a.getIncidentDate().isBefore(endDate))
+			approvedIncidents = incidents.stream().filter(a -> a.getIncidentDate().isBefore(endDate))
 					.collect(Collectors.toList());
 		} else {
-			Incident last = Collections.max(incidents, Comparator.comparing(c -> c.getIncidentDate()));
+			Incident last = Collections.max(approvedIncidents, Comparator.comparing(c -> c.getIncidentDate()));
 			dateEnd = createDate.createDateToString(last.getIncidentDate());
 		}
 		if (cathegory.equals(Cathegory.AREA.toString())
 				&& (chartForm.equals("SLICED_PIE") || chartForm.equals("3D_PIE") || chartForm.equals("DONUT"))) {
-			System.out.println("AREA OK");
+			
 
-			map = mapCreator.createMapForArea(incidents);
+			map = mapCreator.createMapForArea(approvedIncidents);
 		} else if (cathegory.equals(Cathegory.EVENT_TYPE.toString())) {
 
-			map = mapCreator.createMapForEvent(incidents);
+			map = mapCreator.createMapForEvent(approvedIncidents);
 		}
 
 		else if (cathegory.equals(Cathegory.CATHEGORY_OF_PERSONEL.toString())) {
 
-			map = mapCreator.createMapForPersonel(incidents);
+			map = mapCreator.createMapForPersonel(approvedIncidents);
 		}
 
 		model.addAttribute("startDate", dateStart);

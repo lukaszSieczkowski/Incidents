@@ -8,7 +8,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java"
 	isELIgnored="false"%>
 
-<c:set var="incident" value="${incident}" />
+<c:set var="userWithDetails" value="${userWithDetails}" />
+<c:set var="alert" value="${alert}" />
 <c:set var="user" value="${user}" />
 <c:set var="date" value="${date}" />
 
@@ -33,9 +34,10 @@
 	integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
 	crossorigin="anonymous"></script>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 
- <style type="text/css">
+<style type="text/css">
   	<%@include file="css/main.css" %>
 </style>
 
@@ -43,13 +45,13 @@
 <body>
 
 	<c:if test="${user.userType eq 'USER'}">
-   		<jsp:include page="/WEB-INF/views/fragments/menuUser.jsp"/>
+		<jsp:include page="/WEB-INF/views/fragments/menuUser.jsp" />
 	</c:if>
-	
+
 	<c:if test="${user.userType eq 'ADMIN'}">
-   		<jsp:include page="/WEB-INF/views/fragments/menuAdmin.jsp"/>
+		<jsp:include page="/WEB-INF/views/fragments/menuAdmin.jsp" />
 	</c:if>
-	
+
 	<div class="col-sm-12">
 		<div class="col-sm-2 ">
 			<div class="alert alert-warning" role="alert">
@@ -63,6 +65,10 @@
 			</div>
 		</div>
 		<div class="col-sm-8 ">
+		<div class="form-group">
+					<p class="help-block text-center"><c:out value="${pageScope.alert}"/></p>
+				</div>
+			<form  method="post" action="editIncident?param=<c:out value="${incident.id}"/>">
 			<table class="table table-bordered">
 				<tr>
 					<td class="cell"><strong>Incident Date</strong></td>
@@ -76,33 +82,75 @@
 				</tr>
 				<tr>
 					<td ><strong>Area</strong></td>
-					<td><c:out value="${incident.area}" /></td>
+					<td>
+					<c:out value="${incident.area}" />
+					<select required class="form-control" id="place" name="area">
+						<option value="">----- Select one -----</option>
+						<option value="OFFICE">Office</option>
+						<option value="WORKSHOP">Workshop</option>
+						<option value="PARK_LOOT">Park Loot</option>
+						<option value="PROJECT_SITE">Project Site</option>
+					</select>
+					
+					</td>
+					
 				</tr>
 				<tr>
 					<td ><strong>Event Type</strong></td>
-					<td><c:out value="${incident.typeOfObservation}" /></td>
+					<td>
+					<c:out value="${incident.typeOfObservation}" />
+					<select class="form-control" id="evenType" required name="typeOfObservation" >
+						<option value="">----- Select one -----</option>
+						<option value="UNSAFE_ACT">Unsafe Act</option>
+						<option value="UNSAFE_CONDITIONS">Unsafe Conditions</option>
+						<option value="SAFE_BEHAVIOURS">Safe Behaviours</option>
+					</select>
+					</td>
 				</tr>
 				<tr>
 					<td ><strong>Exact Location</strong></td>
-					<td><c:out value="${incident.location}" /></td>
+					<td>
+						<c:out value="${incident.location}" />
+						<textarea class="form-control" rows="2" id="location" required name="location"> </textarea>
+					</td>
 				</tr>
 				<tr>
 					<td ><strong>Cathegory of personel</strong></td>
-					<td><c:out value="${incident.cathegoryOfPersonel}" /></td>
+					<td>
+					<c:out value="${incident.cathegoryOfPersonel}" />
+					<select class="form-control" id="personel" required name="cathegoryOfPersonel">
+						<option value="">----- Select one -----</option>
+						<option value="OWN">Own</option>
+						<option value="CONTRACTOR">Contractor</option>
+						<option value="CLIENT">Client</option>
+						<option value="THIRD_PARTY">Third Party</option>
+					</select>
+					
+					</td>
 				</tr>
 				
 				<tr>
 					<td ><strong>Details of Safety</strong></td>
-					<td><c:out value="${incident.details}" /></td>
+					<td>
+					<c:out value="${incident.details}" />
+					<textarea class="form-control" rows="5" id="safetyDetails" required name="details"></textarea>
+					</td>
 				</tr>
 				<tr>
 					<td ><strong>Immediate Action
 							Taken/Recommended</strong></td>
-					<td><c:out value="${incident.action}" /></td>
+					<td>
+					<c:out value="${incident.action}" />
+					<textarea class="form-control" rows="5" id="action" required name="action"></textarea>
+					</td>
 				</tr>
 				<tr>
 					<td ><strong>Supervisior Informed</strong></td>
-					<td><c:out value="${incident.supervisorInformed}" /></td>
+					<td>
+					<c:out value="${incident.supervisorInformed}" /></br>
+					<label class="radio-inline"><input type="radio" value="YES" name="supervisorInformed">Yes</label>
+					<label class="radio-inline"><input type="radio" value= "NO" checked="checked" name="supervisorInformed">No</label>
+					</td>
 				</tr>
 				<tr>
 					<td ><strong>Incident Reported By</strong></td>
@@ -117,39 +165,12 @@
 						<c:out value="${incident.incidentStatus}"/> 
 					</td>
 				</tr>
-			
-			<c:if test="${user.userType eq 'ADMIN'}">
-   				<tr>
-					<td ><strong>Actions</strong></td>
-					<td>
-						<div>
-							<a href="closeIncident?param=<c:out value="${incident.id}"/>"><button  type="submit"
-							class="btn btn-warning btn-lg smallButton">Close/Open Incident</button></a>
-			
-							<a href="aproveIncident?param=<c:out value="${incident.id}"/>"><button  type="submit"
-							class="btn btn-warning btn-lg smallButton">Approve/Don't approve</button></a>
-				
-						</div>
-					</td>
-				</tr>
-			</c:if>
-			<c:if test="${user.userType eq 'USER' && incident.incidentStatus eq 'OPEN'}">
-   				<tr>
-					<td ><strong>Actions</strong></td>
-					<td>
-						<div>
-
-							<a href="showEditIncident?param=<c:out value="${incident.id}"/>"><button  type="submit"
-							class="btn btn-warning btn-lg smallButton">Edit Incident</button></a>
-			
-						</div>
-					</td>
-				</tr>
-			</c:if>
 			</table>
 			<div>
-			<a href="showIncidents"><button id="go_back_button" type="submit" class="btn btn-warning btn-lg " >Go back</button></a>
-		</div>
+				<button id="go_back_button" type="submit"
+						class="btn btn-warning btn-lg ">Update</button>
+			</div>
+			</form>
 		</div>
 	</div>
 </body>

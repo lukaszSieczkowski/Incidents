@@ -12,5 +12,8 @@ public interface IncidentDao {
 	public List<Incident> getIncidents(User user);
 
 	public Incident getIncident(long id);
+	
+	public List<Incident> getIncidentsByUserId(long id);
+	public void updateIncident(Incident incident);
 
 }

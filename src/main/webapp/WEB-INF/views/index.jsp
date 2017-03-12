@@ -19,9 +19,7 @@
 
      	<title>Incident Reporting Tool</title>
 </head>
-<body style=
-    "background-image: url("../pics/safety.jpg");"
- >
+<body>
 	 <div class="container-fluid">
      	<div class = "upper_container">
 			<div class="col-md-5 col-md-offset-3 text-center ">

@@ -22,6 +22,7 @@ import org.springframework.web.context.WebApplicationContext;
 import pl.incidents.model.enums.Area;
 import pl.incidents.model.enums.CathegoryOfPersonel;
 import pl.incidents.model.enums.EventType;
+import pl.incidents.model.enums.IncidentStatus;
 import pl.incidents.model.enums.SupervisorInformed;
 
 @Component
@@ -56,6 +57,9 @@ public class Incident implements Serializable {
 	@Enumerated
 	@Column(name = "supervisor_informed", nullable = false)
 	private SupervisorInformed supervisorInformed;
+	@Enumerated
+	@Column(name = "incidentStatus", nullable = false)
+	private IncidentStatus incidentStatus;
 	@ManyToOne
     @JoinColumn(name = "id_user")
 	private User user;
@@ -67,7 +71,7 @@ public class Incident implements Serializable {
 
 	public Incident(LocalDateTime incidentDate, LocalDateTime reportingDate, Area area, String location,
 			EventType typeOfObservation, CathegoryOfPersonel cathegoryOfPersonel, String details, String action,
-			SupervisorInformed supervisorInformed, User user) {
+			SupervisorInformed supervisorInformed,IncidentStatus incidentStatus, User user) {
 		
 		this.incidentDate = incidentDate;
 		this.reportingDate = reportingDate;
@@ -78,6 +82,7 @@ public class Incident implements Serializable {
 		this.details = details;
 		this.action = action;
 		this.supervisorInformed = supervisorInformed;
+		this.incidentStatus = incidentStatus;
 		this.user = user;
 	}
 
@@ -162,6 +167,15 @@ public class Incident implements Serializable {
 
 	public void setSupervisorInformed(SupervisorInformed supervisorInformed) {
 		this.supervisorInformed = supervisorInformed;
+	}
+	
+
+	public IncidentStatus getIncidentStatus() {
+		return incidentStatus;
+	}
+
+	public void setIncidentStatus(IncidentStatus incidentStatus) {
+		this.incidentStatus = incidentStatus;
 	}
 
 	public User getUser() {

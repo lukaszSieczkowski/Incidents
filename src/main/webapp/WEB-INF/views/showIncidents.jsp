@@ -129,6 +129,7 @@
 			<table class="table table-condensed ">
 				<tr>
 					<th id="id">No.</th>
+					<th>Status</th>
 					<th class="date" ><div>
 					<span class="nowrap">Incident  
 							 <a href="sortByIncidentDate?param=desc">&uarr;</a>
@@ -188,6 +189,14 @@
 					
 				<tr>
 					<td>${loop.index+1}</td>
+					<td
+					<c:if test="${incident.incidentStatus eq 'OPEN'}">
+						style="color:green;"
+					</c:if>	
+					<c:if test="${incident.incidentStatus eq 'NOT_APPROVED'}">
+						style="color:red;"
+					</c:if>	
+					>${incident.incidentStatus}</td>
 					<td ><c:out value="${fn:substring(incident.incidentDate, 0, 10)}"/></br>
 									<c:out value="${fn:substring(incident.incidentDate, 11,16)}"/></td>
 					<td><c:out value="${incident.area}"/></td>
@@ -205,7 +214,7 @@
 									<c:out value="${fn:substring(incident.reportingDate, 11,16)}"/></td>
 									 
 					<c:set var="a" value="${incident.id}" />
-					<td class="cell">
+					<td>
 						<a href ="showIncident?param=<c:out value="${a}"/>">Details...</a>
 					</td>
 				</tr>

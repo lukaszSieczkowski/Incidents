@@ -92,7 +92,7 @@
 					<td><c:out value="${user_temp.userActive}"/>......</td>
 					<c:set var="a" value="${user_temp.id}" />
 					<td>
-						<a href ="showUsersIncidents?param=<c:out value="${a}"/>">show Statistics</a>
+						<a href ="showIncidentsForUser?param=<c:out value="${a}"/>&chartForm=3D_PIE">show Statistics</a>
 					</td>
 					
 					<td>
