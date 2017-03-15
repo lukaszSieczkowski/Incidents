@@ -58,13 +58,14 @@ import pl.incidents.utils.PasswordGenerator;
 
 @Controller
 @SessionAttributes("user")
+
 public class MainController {
 
 	/**
 	 * Component with list of available incidents for logged user
 	 */
 	private IncidentList incidentList;
-	
+
 	/**
 	 * Component with list of available users for logged user
 	 */
@@ -83,9 +84,11 @@ public class MainController {
 		this.incidentList = incidentList;
 		this.usersList = usersList;
 	}
+
 	/**
 	 * 
 	 * Method shows main view when application start.
+	 * 
 	 * @return index view
 	 */
 	@RequestMapping("/")
@@ -95,14 +98,18 @@ public class MainController {
 
 	/**
 	 * Logs user.
-	 * @param username Email of logged user.
-	 * @param password Password of logged user.
-	 * @param model  Holder for attributes.
+	 * 
+	 * @param username
+	 *            Email of logged user.
+	 * @param password
+	 *            Password of logged user.
+	 * @param model
+	 *            Holder for attributes.
 	 * @return showIncidents view
 	 */
 	@PostMapping("/login")
-	public String showUser(@RequestParam String username, @RequestParam String password,Model model) {
-		
+	public String showUser(@RequestParam String username, @RequestParam String password, Model model) {
+
 		UserDao userDao = new UserDaoImplementation();
 		IncidentDao incidentDao = new IncidentDaoImplementation();
 		ArrayList<User> userList = (ArrayList<User>) userDao.getUsers();
@@ -114,10 +121,11 @@ public class MainController {
 
 			String formMd5Password = DigestUtils.md5Hex(password).toString();
 
-			
 			if (user.getPassword().equals(formMd5Password)) {
 
 				model.addAttribute("user", user);
+
+				System.out.println(user);
 
 				LocalDateTime date = LocalDateTime.now();
 				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
@@ -130,7 +138,7 @@ public class MainController {
 						.collect(Collectors.toList());
 				incidentList.setIncidents(incidents);
 				model.addAttribute("incidents", incidentList.getIncidents());
-	
+
 				return "showIncidents";
 
 			} else {
@@ -144,10 +152,14 @@ public class MainController {
 			return "index";
 		}
 	}
+
 	/**
 	 * Clean all attributes
-	 * @param request  Giving  access to general request metadata.
-	 * @param status Clean up a session,
+	 * 
+	 * @param request
+	 *            Giving access to general request metadata.
+	 * @param status
+	 *            Clean up a session,
 	 * @return index view.
 	 */
 
@@ -160,20 +172,34 @@ public class MainController {
 
 		return "index";
 	}
+
 	/**
 	 * Saves reported incident.
-	 * @param date Incident date.
-	 * @param hour Incident time(hours). 
-	 * @param minute Incident time(minutes).
-	 * @param area Incident area.
-	 * @param location Incident location.
-	 * @param typeOfObservation Type of Incident.
-	 * @param cathegoryOfPersonel Category of personnel involved in incident.
-	 * @param details Details of incident.
-	 * @param action Actions taken.
-	 * @param supervisor Informed Information is Supervisor informed or not.
-	 * @param model   Holder for attributes.
-	 * @param user Logged user.
+	 * 
+	 * @param date
+	 *            Incident date.
+	 * @param hour
+	 *            Incident time(hours).
+	 * @param minute
+	 *            Incident time(minutes).
+	 * @param area
+	 *            Incident area.
+	 * @param location
+	 *            Incident location.
+	 * @param typeOfObservation
+	 *            Type of Incident.
+	 * @param cathegoryOfPersonel
+	 *            Category of personnel involved in incident.
+	 * @param details
+	 *            Details of incident.
+	 * @param action
+	 *            Actions taken.
+	 * @param supervisor
+	 *            Informed Information is Supervisor informed or not.
+	 * @param model
+	 *            Holder for attributes.
+	 * @param user
+	 *            Logged user.
 	 * @return showIncident view.
 	 */
 
@@ -182,7 +208,6 @@ public class MainController {
 			@RequestParam String area, @RequestParam String location, @RequestParam String typeOfObservation,
 			@RequestParam String cathegoryOfPersonel, @RequestParam String details, @RequestParam String action,
 			@RequestParam String supervisorInformed, Model model, @ModelAttribute User user) {
-	
 
 		IncidentDao incidentDao = new IncidentDaoImplementation();
 		UserDao userDao = new UserDaoImplementation();
@@ -216,6 +241,7 @@ public class MainController {
 
 	/**
 	 * Shows view where can be reported incident
+	 * 
 	 * @return reportIncident view.
 	 */
 	@RequestMapping("/reportIncident")
@@ -225,8 +251,11 @@ public class MainController {
 
 	/**
 	 * Shows selected incident in returned view
-	 * @param param Id of Incident.
-	 * @param model  Holder for attributes.
+	 * 
+	 * @param param
+	 *            Id of Incident.
+	 * @param model
+	 *            Holder for attributes.
 	 * @return showIncident view.
 	 */
 	@GetMapping("/showIncident")
@@ -241,8 +270,11 @@ public class MainController {
 
 	/**
 	 * Shows list of incidents available for logged user in returned view.
-	 * @param user Logged user.
-	 * @param model  Holder for attributes.
+	 * 
+	 * @param user
+	 *            Logged user.
+	 * @param model
+	 *            Holder for attributes.
 	 * @return showIncidents view.
 	 */
 	@RequestMapping("/showIncidents")
@@ -260,19 +292,23 @@ public class MainController {
 
 		return "showIncidents";
 	}
+
 	/**
-	 * Shows view where new user may be added
-	 * @return addUser view.
+	 * Returns addUser view
+	 * 
+	 * @return addUser view
 	 */
 
 	@RequestMapping("/addUser")
 	public String addUser() {
 		return "addUser";
 	}
-	
+
 	/**
 	 * Shows list of users in returned view
-	 * @param model  Holder for attributes.
+	 * 
+	 * @param model
+	 *            Holder for attributes.
 	 * @return showUsers view.
 	 */
 
@@ -291,44 +327,69 @@ public class MainController {
 
 	/**
 	 * Saves new user in System
-	 * @param name New user name.
-	 * @param surname New user surname.
-	 * @param email New user email.
-	 * @param userType New user password.
-	 * @param model  Holder for attributes.
+	 * 
+	 * @param name
+	 *            New user name.
+	 * @param surname
+	 *            New user surname.
+	 * @param email
+	 *            New user email.
+	 * @param userType
+	 *            New user type.
+	 * @param newUser
+	 *            New user object
+	 * @param result
+	 *            Holder for errors
+	 * @param model
+	 *            Holder for attributes.
 	 * @return addUser view
 	 */
 	@RequestMapping("/saveUser")
 	public String saveUser(@RequestParam String name, @RequestParam String surname, @RequestParam String email,
-			@RequestParam String userType, Model model) {
+			@RequestParam String userType, @Valid @ModelAttribute("newUser") User newUser, BindingResult result,
+			Model model) {
 
-		String password;
-		String md5Password;
-		String alert;
-		PasswordGenerator passwordGenerator = new PasswordGenerator();
-		password = passwordGenerator.generatePasword();
+		if (result.hasErrors()) {
 
-		md5Password = DigestUtils.md5Hex(password).toString();
+			model.addAttribute("errors", result.getAllErrors());
+		} else {
 
-		User user = new User(email, md5Password, UserType.valueOf(userType), name, surname,
-				UserActive.valueOf("ACTIVE"));
-		UserDao userDao = new UserDaoImplementation();
-		userDao.saveUser(user);
+			System.out.println("NEW USER " + newUser);
 
-		alert = "The user has been saved successfuly !!!";
-		model.addAttribute("alert", alert);
+			String password;
+			String md5Password;
+			String alert;
+			PasswordGenerator passwordGenerator = new PasswordGenerator();
+			password = passwordGenerator.generatePasword();
 
-		Mail mail = new Mail();
-		String mailContent = mail.prepareContentNewUser(user, password);
-		String mailSubject = mail.prepareSubjectNewUser();
-		mail.sendMail(user.getEmail(), mailContent, mailSubject);
+			md5Password = DigestUtils.md5Hex(password).toString();
+
+			newUser = new User(email, md5Password, UserType.valueOf(userType), name, surname,
+					UserActive.valueOf("ACTIVE"));
+			UserDao userDao = new UserDaoImplementation();
+			userDao.saveUser(newUser);
+
+			alert = "The user has been saved successfuly !!!";
+			model.addAttribute("alert", alert);
+
+			Mail mail = new Mail();
+			String mailContent = mail.prepareContentNewUser(newUser, password);
+			String mailSubject = mail.prepareSubjectNewUser();
+			mail.sendMail(newUser.getEmail(), mailContent, mailSubject);
+
+		}
 
 		return "addUser";
+
 	}
+
 	/**
 	 * Shows user details in returned view
-	 * @param model  Holder for attributes.
-	 * @param param User id.
+	 * 
+	 * @param model
+	 *            Holder for attributes.
+	 * @param param
+	 *            User id.
 	 * @return showUser view
 	 */
 
@@ -342,11 +403,14 @@ public class MainController {
 
 		return "showUser";
 	}
-	
+
 	/**
 	 * Changes user type to Admin or User
-	 * @param model  Holder for attributes.
-	 * @param param User id.
+	 * 
+	 * @param model
+	 *            Holder for attributes.
+	 * @param param
+	 *            User id.
 	 * @return showUser view.
 	 */
 
@@ -372,12 +436,15 @@ public class MainController {
 		return "showUser";
 	}
 
-	 /**
-	  * Changes user activity to Active or Inactive
-	  * @param model  Holder for attributes.
-	  * @param param User id.
-	  * @return showUser view.
-	  */
+	/**
+	 * Changes user activity to Active or Inactive
+	 * 
+	 * @param model
+	 *            Holder for attributes.
+	 * @param param
+	 *            User id.
+	 * @return showUser view.
+	 */
 	@RequestMapping("/changeUserActivity")
 	public String changeUserActivity(Model model, long param) {
 		UserDao userDao = new UserDaoImplementation();
@@ -389,7 +456,7 @@ public class MainController {
 			userWithDetails.setUserActive(UserActive.INACTIVE);
 			PasswordGenerator pass = new PasswordGenerator();
 			String password = pass.generatePasword();
-			
+
 			String md5Password = DigestUtils.md5Hex(password).toString();
 			userWithDetails.setPassword(md5Password);
 
@@ -402,8 +469,7 @@ public class MainController {
 			userWithDetails.setUserActive(UserActive.ACTIVE);
 			PasswordGenerator pass = new PasswordGenerator();
 			String password = pass.generatePasword();
-			
-			
+
 			String md5Password = DigestUtils.md5Hex(password).toString();
 			userWithDetails.setPassword(md5Password);
 
@@ -426,8 +492,11 @@ public class MainController {
 
 	/**
 	 * Resets user password
-	 * @param model Holder for attributes.
-	 * @param param User id.
+	 * 
+	 * @param model
+	 *            Holder for attributes.
+	 * @param param
+	 *            User id.
 	 * @return showUser view.
 	 */
 	@RequestMapping("/resetUserPassword")
@@ -440,12 +509,12 @@ public class MainController {
 
 		PasswordGenerator passwordGenerator = new PasswordGenerator();
 		password = passwordGenerator.generatePasword();
-		
+
 		String md5Password = DigestUtils.md5Hex(password).toString();
 		userWithDetails.setPassword(md5Password);
 
 		Mail mail = new Mail();
-		String mailContent = mail.prepareContentNewPassword(userWithDetails,md5Password);
+		String mailContent = mail.prepareContentNewPassword(userWithDetails, md5Password);
 		String mailSubject = mail.prepareSubjectNewPassword();
 		mail.sendMail(userWithDetails.getEmail(), mailContent, mailSubject);
 
@@ -460,10 +529,14 @@ public class MainController {
 
 		return "showUser";
 	}
+
 	/**
 	 * Shows statistics available for logged user
-	 * @param chartForm Type of chart
-	 * @param model  Holder for attributes.
+	 * 
+	 * @param chartForm
+	 *            Type of chart
+	 * @param model
+	 *            Holder for attributes.
 	 * @return showStatistics
 	 */
 	@RequestMapping("/showStatistics")
@@ -498,11 +571,16 @@ public class MainController {
 
 		return "showStatistics";
 	}
+
 	/**
 	 * Shows administrator statistics for specific user in returned view
-	 * @param chartForm Type of chart.
-	 * @param param User id.
-	 * @param model Holder for attributes.
+	 * 
+	 * @param chartForm
+	 *            Type of chart.
+	 * @param param
+	 *            User id.
+	 * @param model
+	 *            Holder for attributes.
 	 * @return showStatstics view.
 	 */
 	@RequestMapping("/showIncidentsForUser")
@@ -538,10 +616,14 @@ public class MainController {
 
 		return "showStatistics";
 	}
+
 	/**
 	 * Sets incident as Open or Closed
-	 * @param param Incident id.
-	 * @param model Holder for attributes.
+	 * 
+	 * @param param
+	 *            Incident id.
+	 * @param model
+	 *            Holder for attributes.
 	 * @return showIncident view.
 	 */
 
@@ -561,11 +643,14 @@ public class MainController {
 
 		return "showIncident";
 	}
-	
+
 	/**
 	 * Sets incident as Approved or Not Approved
-	 * @param param Incident id.
-	 * @param model Holder for attributes.
+	 * 
+	 * @param param
+	 *            Incident id.
+	 * @param model
+	 *            Holder for attributes.
 	 * @return showIncident view.
 	 */
 
@@ -586,11 +671,14 @@ public class MainController {
 
 		return "showIncident";
 	}
-	
+
 	/**
 	 * Returns specific incident in editView.
-	 * @param param Incident id.
-	 * @param model Holder for attributes.
+	 * 
+	 * @param param
+	 *            Incident id.
+	 * @param model
+	 *            Holder for attributes.
 	 * @return editIncident view.
 	 */
 
@@ -602,18 +690,28 @@ public class MainController {
 		model.addAttribute("incident", incident);
 		return "editIncident";
 	}
-	
+
 	/**
 	 * Edit incident
-	 * @param area Incident Area.
-	 * @param location Incident Location.
-	 * @param typeOfObservation Type of Incident.
-	 * @param cathegoryOfPersonel Category of personnel involved in incident.
-	 * @param details Incident details
-	 * @param action Actions taken.
-	 * @param supervisorInformed Informed Information is Supervisor informed or not.
-	 * @param param Incident id. 
-	 * @param model Holder for attributes.
+	 * 
+	 * @param area
+	 *            Incident Area.
+	 * @param location
+	 *            Incident Location.
+	 * @param typeOfObservation
+	 *            Type of Incident.
+	 * @param cathegoryOfPersonel
+	 *            Category of personnel involved in incident.
+	 * @param details
+	 *            Incident details
+	 * @param action
+	 *            Actions taken.
+	 * @param supervisorInformed
+	 *            Informed Information is Supervisor informed or not.
+	 * @param param
+	 *            Incident id.
+	 * @param model
+	 *            Holder for attributes.
 	 * @return showIncident view.
 	 */
 
@@ -638,9 +736,10 @@ public class MainController {
 		model.addAttribute("incident", incident);
 		return "showIncident";
 	}
-	
+
 	/**
 	 * Shows view where password may be changed.
+	 * 
 	 * @return editPassword view.
 	 */
 	@RequestMapping("/editPassword")
@@ -650,11 +749,17 @@ public class MainController {
 
 	/**
 	 * Changes user password
-	 * @param oldPassword Old password.
-	 * @param newPassword1 New password.
-	 * @param newPassword2 Repeated new password.
-	 * @param model Holder for attributes.
-	 * @param user Logged user.
+	 * 
+	 * @param oldPassword
+	 *            Old password.
+	 * @param newPassword1
+	 *            New password.
+	 * @param newPassword2
+	 *            Repeated new password.
+	 * @param model
+	 *            Holder for attributes.
+	 * @param user
+	 *            Logged user.
 	 * @return editPassword view.
 	 */
 	@RequestMapping("/changePassword")
@@ -663,13 +768,16 @@ public class MainController {
 		String oldPasswordMd5 = DigestUtils.md5Hex(oldPassword).toString();
 
 		String alert = null;
-		if (user.getPassword().equals(oldPasswordMd5) && newPassword1.equals(newPassword2)&&(!newPassword1.equals(""))) {
+		if (oldPassword.length() < 9 || newPassword1.length() < 9 || newPassword2.length() < 9) {
+			alert = "Password have to contains at least 8 signs";
+		} else if (user.getPassword().equals(oldPasswordMd5) && newPassword1.equals(newPassword2)
+				&& (!newPassword1.equals(""))) {
 			UserDao userdao = new UserDaoImplementation();
 			String newPasswordMd5 = DigestUtils.md5Hex(newPassword1).toString();
 			user.setPassword(newPasswordMd5);
 			userdao.updateUser(user);
 			Mail mail = new Mail();
-			String mailContent = mail.prepareContentNewPassword(user,newPassword1);
+			String mailContent = mail.prepareContentNewPassword(user, newPassword1);
 			String subject = mail.prepareSubjectNewPassword();
 			mail.sendMail(user.getEmail(), mailContent, subject);
 			alert = "Password was changed successful";
