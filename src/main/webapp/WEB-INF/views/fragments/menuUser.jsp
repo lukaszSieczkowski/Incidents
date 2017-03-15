@@ -1,5 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+	
 <nav class="navbar ">
 	<div class="container-fluid">
 		<div class="navbar-header">
@@ -9,10 +9,14 @@
 			<li><a href="reportIncident">Report Incident</a></li>
 			<li><a href="showIncidents">Show Reported Incidents</a></li>
 			<li><a href="showStatistics?chartForm=3D_PIE">Show Incidents Statistics</a></li>
+			<li><a href="editPassword">Change Password</a></li>
 		</ul>
 		<ul class="nav navbar-nav navbar-right">
-			<li><a href="logout"><span
-					class="glyphicon glyphicon-log-in"></span> Logout</a></li>
+			<li>
+				<a href="logout">
+					<span class="glyphicon glyphicon-log-in"></span> Logout
+				</a>
+			</li>
 		</ul>
 	</div>
 </nav>

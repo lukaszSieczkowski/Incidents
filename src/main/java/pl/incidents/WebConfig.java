@@ -14,6 +14,10 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 @EnableWebMvc
 public class WebConfig extends WebMvcConfigurerAdapter {
 
+	/**
+	 * ViewResolver configuration
+	 * @return ViewResolver
+	 */
 	@Bean
 	public ViewResolver viewResolver() {
 		InternalResourceViewResolver internalResourceViewResolver = new InternalResourceViewResolver();
@@ -22,6 +26,9 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 		return internalResourceViewResolver;
 	}
 
+	/**
+	 * Configure Spring for all static files. This static files will be presented with default server configuration
+	 */
 	@Override
 	public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
 		configurer.enable();

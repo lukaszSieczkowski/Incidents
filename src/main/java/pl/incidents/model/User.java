@@ -3,6 +3,7 @@ package pl.incidents.model;
 import java.io.Serializable;
 import java.util.List;
 
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,19 +11,13 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import org.springframework.web.context.WebApplicationContext;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-import org.springframework.context.annotation.ScopedProxyMode;
 
 import pl.incidents.model.enums.UserActive;
 import pl.incidents.model.enums.UserType;
 
-@Component
-@Scope(scopeName = WebApplicationContext.SCOPE_SESSION, proxyMode = ScopedProxyMode.TARGET_CLASS)
+
 @Entity
 @Table(name = "users")
 public class User implements Serializable {

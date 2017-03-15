@@ -9,9 +9,6 @@
 	isELIgnored="false"%>
 
 <c:set var="userWithDetails" value="${userWithDetails}" />
-<c:set var="alert" value="${alert}" />
-<c:set var="user" value="${user}" />
-<c:set var="date" value="${date}" />
 
 <!DOCTYPE html>
 <html>
@@ -41,6 +38,8 @@
   	<%@include file="css/main.css" %>
 </style>
 
+<title>Incident Reporting Tool</title>
+
 </head>
 <body>
 
@@ -55,13 +54,9 @@
 	<div class="col-sm-12">
 		<div class="col-sm-2 ">
 			<div class="alert alert-warning" role="alert">
-				<strong>User:</strong>
-				<c:out value="${user.name}" />
-				<c:out value="${user.surname}" />
-				</br> <strong>Role:</strong>
-				<c:out value="${user.userType}" />
-				</br> <strong>Date:</strong>
-				<c:out value="${date}" />
+				<strong>User:</strong> <c:out value="${user.name}"/> <c:out value="${user.surname}"/> </br> 
+				<strong>Role:</strong> <c:out value="${user.userType}"/></br>
+				<strong>Date:</strong> <c:out value="${date}"/>
 			</div>
 		</div>
 		<div class="col-sm-8 ">
@@ -90,21 +85,25 @@
 					<td>
 						<div>
 
-							<a href="changeUserType?param=<c:out value="${userWithDetails.id}"/>"><button  type="submit"
-							class="btn btn-warning btn-lg smallButton">Change User Type</button></a>
+							<a href="changeUserType?param=<c:out value="${userWithDetails.id}"/>">
+								<button  type="submit" class="btn btn-warning btn-lg smallButton">Change User Type</button>
+							</a>
 			
-							<a href="changeUserActivity?param=<c:out value="${userWithDetails.id}"/>"><button  type="submit"
-							class="btn btn-warning btn-lg smallButton">Activate/Deactivate User</button></a>
+							<a href="changeUserActivity?param=<c:out value="${userWithDetails.id}"/>">
+								<button  type="submit" class="btn btn-warning btn-lg smallButton">Activate/Deactivate User</button>
+							</a>
 				
-							<a href="resetUserPassword?param=<c:out value="${userWithDetails.id}"/>"><button   type="submit"
-							class="btn btn-warning btn-lg smallButton">Reset Password</button></a>
+							<a href="resetUserPassword?param=<c:out value="${userWithDetails.id}"/>">
+								<button   type="submit" class="btn btn-warning btn-lg smallButton">Reset Password</button>
+							</a>
 						</div>
 					</td>
 				</tr>
 			</table>
 			<div>
-				<a href="getUsers"><button id="go_back_button" type="submit"
-						class="btn btn-warning btn-lg ">Go back</button></a>
+				<a href="getUsers">
+					<button id="go_back_button" type="submit" class="btn btn-warning btn-lg ">Go back</button>
+				</a>
 			</div>
 		</div>
 	</div>

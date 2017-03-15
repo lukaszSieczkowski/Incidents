@@ -8,10 +8,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java"
 	isELIgnored="false"%>
 
-<c:set var="incident" value="${incident}" />
-<c:set var="user" value="${user}" />
-<c:set var="date" value="${date}" />
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -39,6 +35,8 @@
   	<%@include file="css/main.css" %>
 </style>
 
+<title>Incident Reporting Tool</title>
+
 </head>
 <body>
 
@@ -53,13 +51,9 @@
 	<div class="col-sm-12">
 		<div class="col-sm-2 ">
 			<div class="alert alert-warning" role="alert">
-				<strong>User:</strong>
-				<c:out value="${user.name}" />
-				<c:out value="${user.surname}" />
-				</br> <strong>Role:</strong>
-				<c:out value="${user.userType}" />
-				</br> <strong>Date:</strong>
-				<c:out value="${date}" />
+				<strong>User:</strong> <c:out value="${user.name}" /> <c:out value="${user.surname}" /></br>
+				<strong>Role:</strong> <c:out value="${user.userType}" /></br> 
+				<strong>Date:</strong> <c:out value="${date}" />
 			</div>
 		</div>
 		<div class="col-sm-8 ">
@@ -118,34 +112,33 @@
 					</td>
 				</tr>
 			
-			<c:if test="${user.userType eq 'ADMIN'}">
-   				<tr>
-					<td ><strong>Actions</strong></td>
-					<td>
-						<div>
-							<a href="closeIncident?param=<c:out value="${incident.id}"/>"><button  type="submit"
-							class="btn btn-warning btn-lg smallButton">Close/Open Incident</button></a>
-			
-							<a href="aproveIncident?param=<c:out value="${incident.id}"/>"><button  type="submit"
-							class="btn btn-warning btn-lg smallButton">Approve/Don't approve</button></a>
+				<c:if test="${user.userType eq 'ADMIN'}">
 				
-						</div>
-					</td>
-				</tr>
-			</c:if>
-			<c:if test="${user.userType eq 'USER' && incident.incidentStatus eq 'OPEN'}">
    				<tr>
 					<td ><strong>Actions</strong></td>
 					<td>
 						<div>
-
-							<a href="showEditIncident?param=<c:out value="${incident.id}"/>"><button  type="submit"
-							class="btn btn-warning btn-lg smallButton">Edit Incident</button></a>
+							<a href="closeIncident?param=<c:out value="${incident.id}"/>">
+								<button  type="submit" class="btn btn-warning btn-lg smallButton">Close/Open Incident</button>
+							</a>
 			
+							<a href="aproveIncident?param=<c:out value="${incident.id}"/>">
+								<button  type="submit" class="btn btn-warning btn-lg smallButton">Approve/Don't approve</button>
+							</a>
+							
+							<c:if test="${incident.incidentStatus eq 'OPEN'}">
+								
+								<a href="showEditIncident?param=<c:out value="${incident.id}"/>">
+									<button  type="submit" class="btn btn-warning btn-lg smallButton">Edit Incident</button>
+								</a>
+								
+							</c:if>
 						</div>
 					</td>
 				</tr>
-			</c:if>
+				
+				</c:if>
+				
 			</table>
 			<div>
 			<a href="showIncidents"><button id="go_back_button" type="submit" class="btn btn-warning btn-lg " >Go back</button></a>

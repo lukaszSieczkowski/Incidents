@@ -16,9 +16,14 @@
 		<hibernate.version>5.2.5.Final</hibernate.version>
 		<mysql.connector.version>5.1.39</mysql.connector.version>
 		<dbcp.version>2.1.1</dbcp.version>
-		<spring.security.version>4.2.0.RELEASE</spring.security.version>
+		<bean.validation.version>1.1.0.Final</bean.validation.version>
 	</properties>
 	<dependencies>
+		<dependency>
+			<groupId>commons-codec</groupId>
+			<artifactId>commons-codec</artifactId>
+			<version>1.10</version>
+		</dependency>
 		<dependency>
 			<groupId>javax.mail</groupId>
 			<artifactId>mail</artifactId>
@@ -66,18 +71,20 @@
 			<version>${mysql.connector.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-web</artifactId>
-			<version>${spring.security.version}</version>
+			<groupId>javax.validation</groupId>
+			<artifactId>validation-api</artifactId>
+			<version>${bean.validation.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-config</artifactId>
-			<version>${spring.security.version}</version>
-			<scope>runtime</scope>
+			<groupId>javax.validation</groupId>
+			<artifactId>validation-api</artifactId>
+			<version>1.1.0.Final</version>
 		</dependency>
-
-
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-validator</artifactId>
+			<version>5.4.0.Final</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<finalName>Incidents_Repoting_Tool</finalName>

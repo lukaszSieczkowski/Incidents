@@ -7,6 +7,7 @@
 <c:set var="endDate" value="${endDate}"  />	
 
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
 <script type="text/javascript">
 	google.charts.load('current', {packages: ['corechart']});     
 </script>
@@ -17,9 +18,9 @@
    		data.addColumn('string', 'Area');
    		data.addColumn('number', 'Percentage');
    		data.addRows([
-	   	<c:forEach var="entry" items="${map}">
-			['<c:out value="${entry.key}"/>', <c:out value="${entry.value}"/>],
-		</c:forEach>
+	   		<c:forEach var="entry" items="${map}">
+				['<c:out value="${entry.key}"/>', <c:out value="${entry.value}"/>],
+			</c:forEach>
    		]);
    		var options = {'title':'Incidents reported from <c:out value="${startDate}"/> until <c:out value="${endDate}"/>',
 						'width':600,

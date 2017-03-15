@@ -1,7 +1,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
-<%@ page contentType="text/html;charset=UTF-8" language="java"
-	isELIgnored="false"%>
+<%@ page contentType="text/html;charset=UTF-8" language="java" isELIgnored="false"%>
 	
 <c:set var="map" value="${map}" />	
 <c:set var="startDate" value="${startDate}"  />	

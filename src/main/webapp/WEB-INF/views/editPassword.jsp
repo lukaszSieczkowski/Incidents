@@ -46,40 +46,33 @@
 	<div class="col-sm-12">
 		<div class="col-sm-2 ">
 			<div class="alert alert-warning" role="alert">
-				<strong>User:</strong> <c:out value="${user.name}"/> <c:out value="${user.surname}"/> </br> 
-				<strong>Role:</strong> <c:out value="${user.userType}"/></br>
-				<strong>Date:</strong> <c:out value="${date}"/>
+				<strong>User:</strong> <c:out value="${user.name}" /> <c:out value="${user.surname}" /></br>
+				<strong>Role:</strong> <c:out value="${user.userType}" /></br> 
+				<strong>Date:</strong> <c:out value="${date}" />
 			</div>
 		</div>
-		
+	
 		<div class="col-sm-4 ">
-			<form  method="post" action="saveUser" >
+			<form  method="post" action="changePassword" >
 				<div class="form-group">
-					<label for="name">First Name</label> 
-					<input type="text"  class="form-control"  id="name" required  name="name"/> 
+					<label for="oldPassword">Old Password</label> 
+					<input type="password"  class="form-control"  id="oldPassword" required  name="oldPassword"/> 
 				</div>
 				<div class="form-group">
-					<label for="surname">Last Name</label> 
-					<input type="text" class="form-control"  id="surname" required  name="surname"/> 
+					<label for="newPassword1">New Password</label> 
+					<input type="password" class="form-control"  id="newPassword1" required  name="newPassword1"/> 
 				</div>
 				<div class="form-group">
-					<label for="email">Email</label> 
-					<input type="email" class="form-control"   id="email" required name="email"/>
+					<label for="newPassword2">Repeat New Password</label> 
+					<input type="password" class="form-control"   id="newPassword2" required name="newPassword2"/>
 				</div>
-				<div class="form-group">
-					<label for="userType">Role</label> 
-					<select required class="form-control" id="userType" name="userType">
-						<option value="">----- Select one -----</option>
-						<option value="USER">User</option>
-						<option value="ADMIN">Admin</option>
-					</select>
-				</div>
+				
 				<div class="form-group">
 					<p class="help-block text-center"><c:out value="${pageScope.alert}"/></p>
 				</div>
-				<button type="submit" class="btn btn-warning btn-lg ">Save User</button>
+				<button type="submit" class="btn btn-warning btn-lg change_password_button">Change Password</button>
 			</form>
 		</div>
-	</div>	
+	</div>
 </body>
 </html>
