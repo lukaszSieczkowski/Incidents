@@ -1,12 +1,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
-<%@ page contentType="text/html;charset=UTF-8" language="java"
-	isELIgnored="false"%>
-	
+<%@ page contentType="text/html;charset=UTF-8" language="java" isELIgnored="false"%>
 
-
-<c:set var="user" value="${user}" scope="session" />	
-<c:set var="date" value="${date}" scope="session" />
 <c:set var="chartForm" value="${chartForm}" scope="session" />
 		
 <!DOCTYPE html>
@@ -67,7 +62,10 @@
 	
 <style type="text/css">
   	<%@include file="css/main.css" %>
-</style>	
+</style>
+
+<title>Incident Reporting Tool</title>
+	
 </head>
 <body>
 
@@ -79,10 +77,12 @@
    		<jsp:include page="/WEB-INF/views/fragments/menuAdmin.jsp"/>
 	</c:if>
 	
+	<div class="col-sm-12">	
 		<div class="col-sm-2 ">
-			<div class="alert alert-warning">
-				<strong>User:</strong> <c:out value="${user.name}"/> <c:out value="${user.surname}"/> </br> <strong>Role:</strong> <c:out value="${user.userType}"/></br>
-				 <strong>Date:</strong> <c:out value="${date}"/>
+			<div class="alert alert-warning" role="alert">
+				<strong>User:</strong> <c:out value="${user.name}"/> <c:out value="${user.surname}"/> </br> 
+				<strong>Role:</strong> <c:out value="${user.userType}"/></br>
+				<strong>Date:</strong> <c:out value="${date}"/>
 			</div>
 		</div>
 	
@@ -123,9 +123,9 @@
 			<div class="col-sm-2">
 				<button type="submit" class="btn btn-warning btn-lg ">Filter</button>
 			</div>
-		</div>
 		</form>
-		<div id="chart"></div>	
+		<div id="chart"></div>
+	</div>	
 </body>
 </html>
 	

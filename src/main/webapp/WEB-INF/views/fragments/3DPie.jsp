@@ -7,6 +7,7 @@
 <c:set var="endDate" value="${endDate}"  />	
 
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
 <script type="text/javascript">
 	google.charts.load('current', {packages: ['corechart']});     
 </script>
@@ -22,9 +23,9 @@
 			</c:forEach>
   	 	]);
    		var options = {'title':'Incidents reported from <c:out value="${startDate}"/> until <c:out value="${endDate}"/>',
-					'width':600,
-					'height':400,
-       				is3D:true
+						'width':600,
+						'height':400,
+       					is3D:true
    		};
    			var chart = new google.visualization.PieChart(document.getElementById('chart'));
    			chart.draw(data, options);

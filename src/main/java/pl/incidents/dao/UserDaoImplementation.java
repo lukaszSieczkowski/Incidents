@@ -10,57 +10,67 @@ import javax.persistence.Persistence;
 import javax.persistence.TypedQuery;
 
 import pl.incidents.model.User;
-import pl.incidents.model.enums.UserType;
 
 public class UserDaoImplementation implements UserDao {
 
+	EntityManagerFactory emFactory;
+	EntityManager entityManager;
+	EntityTransaction tx;
+
+	public UserDaoImplementation() {
+		emFactory = Persistence.createEntityManagerFactory("myPersistanceUnit");
+		entityManager = emFactory.createEntityManager();
+	}
+
+	/**
+	 * Save user in data base
+	 * 
+	 * @param user
+	 */
 	@Override
 	public void saveUser(User user) {
-		
-		EntityManagerFactory emFactory = Persistence.createEntityManagerFactory("myPersistanceUnit");
-		EntityManager entityManager = emFactory.createEntityManager();
-		EntityTransaction tx = entityManager.getTransaction();
+		tx = entityManager.getTransaction();
 		tx.begin();
 		entityManager.persist(user);
 		tx.commit();
 		entityManager.close();
-		
 	}
 
+	/**
+	 * Read all users from data base
+	 * 
+	 * @return List of users
+	 */
 	@Override
 	public ArrayList<User> getUsers() {
-
-		EntityManagerFactory emFactory = Persistence.createEntityManagerFactory("myPersistanceUnit");
-		EntityManager entityManager = emFactory.createEntityManager();
-
 		TypedQuery<User> query = entityManager.createQuery("SELECT c FROM User c", User.class);
 		ArrayList<User> resultList = (ArrayList<User>) query.getResultList();
-
 		return resultList;
-
 	}
-	
 
-
+	/**
+	 * Read specific user from data base
+	 * 
+	 * @param id
+	 *            User id
+	 * @return user
+	 */
 	public User getUser(long id) {
-		
-		EntityManagerFactory emFactory = Persistence.createEntityManagerFactory("myPersistanceUnit");
-		EntityManager em = emFactory.createEntityManager();
-		User user = em.find(User.class, id);
-		em.close();
-		
+		User user = entityManager.find(User.class, id);
+		entityManager.close();
 		return user;
 	}
 
+	/**
+	 * Update user
+	 * 
+	 * @param user
+	 */
 	public void updateUser(User user) {
-		
-		EntityManagerFactory emFactory = Persistence.createEntityManagerFactory("myPersistanceUnit");
-		EntityManager em = emFactory.createEntityManager();
-		EntityTransaction tx = em.getTransaction();
+		EntityTransaction tx = entityManager.getTransaction();
 		tx.begin();
-		em.merge(user);
+		entityManager.merge(user);
 		tx.commit();
-		em.close();
-		
+		entityManager.close();
 	}
 }

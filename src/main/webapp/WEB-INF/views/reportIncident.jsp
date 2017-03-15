@@ -1,10 +1,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
-<%@ page contentType="text/html;charset=UTF-8" language="java"
-	isELIgnored="false"%>
-
-<c:set var="user" value="${user}" scope="session" />	
-<c:set var="date" value="${date}" scope="session" />		
+<%@ page contentType="text/html;charset=UTF-8" language="java" isELIgnored="false"%>
+		
 <!DOCTYPE html>
 <html>
 <head>
@@ -42,7 +39,10 @@
 </script>
 <style type="text/css">
   	<%@include file="css/main.css" %>
-</style>	
+</style>
+
+<title>Incident Reporting Tool</title>
+	
 </head>
 <body>
 
@@ -53,11 +53,12 @@
 	<c:if test="${user.userType eq 'ADMIN'}">
    		<jsp:include page="/WEB-INF/views/fragments/menuAdmin.jsp"/>
 	</c:if>
-	
+	<div class="col-sm-12">
 		<div class="col-sm-2 ">
 			<div class="alert alert-warning" role="alert">
-				<strong>User:</strong> <c:out value="${user.name}"/> <c:out value="${user.surname}"/> </br> <strong>Role:</strong> <c:out value="${user.userType}"/></br>
-				 <strong>Date:</strong> <c:out value="${date}"/>
+				<strong>User:</strong> <c:out value="${user.name}"/> <c:out value="${user.surname}"/> </br>
+				<strong>Role:</strong> <c:out value="${user.userType}"/></br>
+				<strong>Date:</strong> <c:out value="${date}"/>
 			</div>
 		</div>
 
@@ -69,8 +70,8 @@
 						id="datepicker">
 				</div>
 				<div class="form-group ">
-					<label for="time" id="labelTime">Observation Time</label> <select
-						class="form-control" id="time" name="hour">
+					<label for="time" id="labelTime">Observation Time</label> 
+					<select class="form-control" id="time" name="hour">
 						<option>00</option>
 						<option>01</option>
 						<option>02</option>
@@ -103,8 +104,8 @@
 					</select>
 				</div>
 				<div class="form-group">
-					<label for="place">Area</label> <select required
-						class="form-control" id="place" name="area">
+					<label for="place">Area</label>
+					<select required class="form-control" id="place" name="area">
 						<option value="">----- Select one -----</option>
 						<option value="OFFICE">Office</option>
 						<option value="WORKSHOP">Workshop</option>
@@ -117,8 +118,8 @@
 					<textarea class="form-control" rows="2" id="location" required name="location"> </textarea>
 				</div>
 				<div class="form-group">
-					<label for="eventType">Event Type</label> <select
-						class="form-control" id="evenType" required name="typeOfObservation">
+					<label for="eventType">Event Type</label>
+					<select class="form-control" id="evenType" required name="typeOfObservation">
 						<option value="">----- Select one -----</option>
 						<option value="UNSAFE_ACT">Unsafe Act</option>
 						<option value="UNSAFE_CONDITIONS">Unsafe Conditions</option>
@@ -126,8 +127,8 @@
 					</select>
 				</div>
 				<div class="form-group">
-					<label for="personel">Cathegory of Personeel</label> <select
-						class="form-control" id="personel" required name="cathegoryOfPersonel">
+					<label for="personel">Cathegory of Personeel</label>
+					<select class="form-control" id="personel" required name="cathegoryOfPersonel">
 						<option value="">----- Select one -----</option>
 						<option value="OWN">Own</option>
 						<option value="CONTRACTOR">Contractor</option>
@@ -138,8 +139,7 @@
 			</div>
 			<div class="col-sm-4 col-sm-offset-1 ">
 				<div class="form-group">
-					<label for="safetyDetails">Details of Safety
-						Observation</label>
+					<label for="safetyDetails">Details of Safety Observation</label>
 					<textarea class="form-control" rows="5" id="safetyDetails" required name="details"></textarea>
 				</div>
 			</div>
@@ -166,5 +166,6 @@
 				<button type="submit" class="btn btn-warning btn-lg ">Submit</button>
 			</div>
 		</form>
+	</div>
 </body>
 </html>

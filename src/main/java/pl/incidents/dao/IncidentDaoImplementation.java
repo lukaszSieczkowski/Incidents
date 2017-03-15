@@ -15,19 +15,38 @@ import pl.incidents.model.enums.UserType;
 
 public class IncidentDaoImplementation implements IncidentDao {
 
+	EntityManagerFactory emFactory;
+	EntityManager entityManager;
+	EntityTransaction tx;
+
+	public IncidentDaoImplementation() {
+		emFactory = Persistence.createEntityManagerFactory("myPersistanceUnit");
+		entityManager = emFactory.createEntityManager();
+	}
+
+	/**
+	 * Save incident in data base
+	 * 
+	 * @param incident
+	 *            Incident with will be stored in data base.
+	 */
+	
 	public void saveIncident(Incident incident) {
-		EntityManagerFactory emFactory = Persistence.createEntityManagerFactory("myPersistanceUnit");
-		EntityManager entityManager = emFactory.createEntityManager();
-		EntityTransaction tx = entityManager.getTransaction();
+		tx = entityManager.getTransaction();
 		tx.begin();
 		entityManager.persist(incident);
 		tx.commit();
 		entityManager.close();
 	}
 
+	/**
+	 * Reads all available incidents from data base for user type.
+	 * 
+	 * @param user
+	 * @return List of incidents
+	 */
+	
 	public List<Incident> getIncidents(User user) {
-		EntityManagerFactory emFactory = Persistence.createEntityManagerFactory("myPersistanceUnit");
-		EntityManager entityManager = emFactory.createEntityManager();
 
 		TypedQuery<Incident> query = null;
 		List<Object[]> list = null;
@@ -52,10 +71,15 @@ public class IncidentDaoImplementation implements IncidentDao {
 		return resultList;
 	}
 
+	/**
+	 * Reads incidents from data base reported by specific user
+	 * 
+	 * @param id
+	 *            User id
+	 * @return Incident list
+	 */
 	
 	public List<Incident> getIncidentsByUserId(long id) {
-		EntityManagerFactory emFactory = Persistence.createEntityManagerFactory("myPersistanceUnit");
-		EntityManager entityManager = emFactory.createEntityManager();
 
 		TypedQuery<Incident> query = null;
 		List<Object[]> list = null;
@@ -75,24 +99,35 @@ public class IncidentDaoImplementation implements IncidentDao {
 		return resultList;
 	}
 
+	/**
+	 * Reads specific incident from data base
+	 * 
+	 * @param id
+	 *            Incident id.
+	 * @return Incident
+	 */
+
 	public Incident getIncident(long id) {
 
-		EntityManagerFactory emFactory = Persistence.createEntityManagerFactory("myPersistanceUnit");
-		EntityManager em = emFactory.createEntityManager();
-		Incident incident = em.find(Incident.class, id);
-		em.close();
+		Incident incident = entityManager.find(Incident.class, id);
+		entityManager.close();
 
 		return incident;
 	}
-	
-	public void updateIncident(Incident incident){
 
-		EntityManagerFactory emFactory = Persistence.createEntityManagerFactory("myPersistanceUnit");
-		EntityManager entityManager = emFactory.createEntityManager();
-		EntityTransaction tx = entityManager.getTransaction();
+	/**
+	 * Updates incident
+	 * 
+	 * @param incident
+	 */
+
+	public void updateIncident(Incident incident) {
+
+		tx = entityManager.getTransaction();
 		tx.begin();
 		entityManager.merge(incident);
 		tx.commit();
 		entityManager.close();
 	}
+
 }

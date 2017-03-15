@@ -11,6 +11,7 @@
 <c:set var="incidents" value="${incidents}" scope="session"/>
 <c:set var="user" value="${user}" scope="session" />	
 <c:set var="date" value="${date}" scope="session" />	
+<c:set var="alert" value="${alert}" scope="page" />	
 
 <!DOCTYPE html>
 <html>
@@ -61,6 +62,8 @@
   	<%@include file="css/main.css" %>
 </style>
 
+<title>Incident Reporting Tool</title>
+
 </head>
 <body>
 	<c:if test="${user.userType eq 'USER'}">
@@ -72,6 +75,7 @@
 	</c:if>
 	
 	<div class="col-sm-12">	
+		
 		<div class="col-sm-2 ">
 			<div class="alert alert-warning" role="alert">
 				<strong>User:</strong> <c:out value="${user.name}"/> <c:out value="${user.surname}"/> </br> 
@@ -79,6 +83,7 @@
 				<strong>Date:</strong> <c:out value="${date}"/>
 			</div>
 		</div>
+		
 		<form  method="post" action="filterIncidents">
 			<div class="col-sm-2 ">
 				<div class="form-group">
@@ -113,8 +118,8 @@
 			</div>
 			<div class="col-sm-2 col-sm-offset-1 ">
 				<div class="form-group">
-					<label for="personel">Cathegory of Personeel</label> <select
-						class="form-control" id="personel" name="cathegoryOfPersonel">
+					<label for="personel">Cathegory of Personeel</label> 
+					<select class="form-control" id="personel" name="cathegoryOfPersonel">
 						<option value="">--------- All ---------</option>
 						<option value="OWN">Own</option>
 						<option value="CONTRACTOR">Contractor</option>
@@ -126,23 +131,26 @@
 			</div>
 		</form>
 		<div class="col-sm-12  ">
+			<div class="form-group">
+				<p class="help-block text-center"><c:out value="${pageScope.alert}"/></p>
+			</div>
 			<table class="table table-condensed ">
 				<tr>
 					<th id="id">No.</th>
 					<th>Status</th>
-					<th class="date" ><div>
-					<span class="nowrap">Incident  
-							 <a href="sortByIncidentDate?param=desc">&uarr;</a>
-							 <a href="sortByIncidentDate?param=asc"> &darr;</a>
-						</span>
-					</div>
-					<div>Date ​</div>
-						
+					<th class="date" >
+						<div>
+							<span class="nowrap">Incident  
+								<a href="sortByIncidentDate?param=desc">&uarr;</a>
+								<a href="sortByIncidentDate?param=asc"> &darr;</a>
+							</span>
+						</div>
+						<div>Date ​</div>
 					</th> 
 					<th>
 						<span class="nowrap">Area ​ 
 							 <a href="sortByArea?param=desc">&uarr;</a>
-							 <a href="sortByAreaAsc?param=asc"> &darr;</a>
+							 <a href="sortByArea?param=asc"> &darr;</a>
 						</span>
 					</th>
 					<th>Exact location</th>

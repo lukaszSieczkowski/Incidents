@@ -4,6 +4,10 @@ import java.util.Random;
 
 public class PasswordGenerator {
 
+	/**
+	 * Generates 8 char password from ASCII small letters, big letters and numbers.
+	 * @return Password.
+	 */
 	public String generatePasword() {
 
 		Random rand = new Random();

@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import pl.incidents.components.IncidentList;
-import pl.incidents.components.UserList;
 import pl.incidents.dao.IncidentDao;
 import pl.incidents.dao.IncidentDaoImplementation;
 import pl.incidents.model.Incident;
@@ -35,15 +34,42 @@ import pl.incidents.utils.MapCreator;
 @SessionAttributes("user")
 public class FilterController {
 
+	/**
+	 * Component with list of available incidents for logged user
+	 */
 	private IncidentList incidentList;
-	private UserList usersList;
 
+	/**
+	 * Constructor for SortControler with injected incidentList.
+	 * 
+	 * @param incidentsList
+	 *            component with list of incidents
+	 */
 	@Autowired
-	public FilterController(IncidentList incidentList, UserList usersList) {
+	public FilterController(IncidentList incidentList) {
 		this.incidentList = incidentList;
-		this.usersList = usersList;
 	}
 
+	/**
+	 * Method Method shows in returned view list of incidents filtered according
+	 * to described parameters.
+	 * 
+	 * @param dateStart
+	 *            Starting date of filtered incidents.
+	 * @param dateEnd
+	 *            Ending date of filtered incidents
+	 * @param area
+	 *            Area.
+	 * @param typeOfObservation
+	 *            Type of Observation.
+	 * @param cathegoryOfPersonel
+	 *            Cathegory of Personel.
+	 * @param model
+	 *            Holder for sorted incident list attribute.
+	 * @param user
+	 *            Logged user.
+	 * @return showIncidentsView
+	 */
 	@RequestMapping("/filterIncidents")
 	public String filterIncidents(@RequestParam String dateStart, @RequestParam String dateEnd,
 			@RequestParam String area, @RequestParam String typeOfObservation, @RequestParam String cathegoryOfPersonel,
@@ -85,6 +111,23 @@ public class FilterController {
 		return "showIncidents";
 	}
 
+	/**
+	 * Method shows in returned view map of incidents filtered according to
+	 * described parameters.Map will be used by Google Charts in returned view.
+	 * 
+	 * @param dateStart
+	 *            Starting date of filtered incidents.
+	 * @param dateEnd
+	 *            Ending date of filtered incidents.
+	 * @param cathegory
+	 *            Category of incident (Area, Event Type, Category of
+	 *            Personnel).
+	 * @param chartForm
+	 *            Google chart form.
+	 * @param model
+	 *            Holder for sorted incident map attribute.
+	 * @return showStatistics view
+	 */
 	@RequestMapping("/filterForChart")
 	public String filterIncidentsForCharts(@RequestParam String dateStart, @RequestParam String dateEnd,
 			@RequestParam String cathegory, @RequestParam String chartForm, Model model) {
@@ -93,9 +136,8 @@ public class FilterController {
 		MapCreator mapCreator = new MapCreator();
 		List<Incident> incidents = incidentList.getIncidents();
 		List<Incident> approvedIncidents = incidents.stream()
-				.filter(a->a.getIncidentStatus()!=IncidentStatus.NOT_APPROVED).collect(Collectors.toList());
-		
-		
+				.filter(a -> a.getIncidentStatus() != IncidentStatus.NOT_APPROVED).collect(Collectors.toList());
+
 		Map<String, Long> map = new HashMap<>();
 
 		if (!dateStart.equals("")) {
@@ -116,7 +158,6 @@ public class FilterController {
 		}
 		if (cathegory.equals(Cathegory.AREA.toString())
 				&& (chartForm.equals("SLICED_PIE") || chartForm.equals("3D_PIE") || chartForm.equals("DONUT"))) {
-			
 
 			map = mapCreator.createMapForArea(approvedIncidents);
 		} else if (cathegory.equals(Cathegory.EVENT_TYPE.toString())) {
@@ -133,7 +174,7 @@ public class FilterController {
 		model.addAttribute("endDate", dateEnd);
 		model.addAttribute("map", map);
 		model.addAttribute("chartForm", chartForm);
-		
+
 		return "showStatistics";
 	}
 }
