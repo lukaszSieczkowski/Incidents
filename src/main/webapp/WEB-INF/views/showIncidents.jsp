@@ -87,11 +87,12 @@
 		<form  method="post" action="filterIncidents">
 			<div class="col-sm-2 ">
 				<div class="form-group">
-					<label for="datepicker">Observation Date</label> 
+					<label for="datepicker">Start Date</label> 
 					<input type="text" class="form-control" name="dateStart" placeholder="dd-mm-yyyy" id="datepicker">
+					
 				</div>
 				<div class="form-group">		
-					<label for="datepicker">Observation Date</label> 
+					<label for="datepicker">End Date</label> 
 					<input type="text" class="form-control" name="dateEnd" placeholder="dd-mm-yyyy" id="datepicker2">
 				</div>
 			</div>

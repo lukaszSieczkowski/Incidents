@@ -4,10 +4,12 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="x" uri="http://java.sun.com/jsp/jstl/xml"%>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" isELIgnored="false"%>
 
-<c:set var="userWithDetails" value="${userWithDetails}" />
+
 <c:set var="alert" value="${alert}" scope="page" />	
+
 
 <!DOCTYPE html>
 <html>
@@ -59,9 +61,7 @@
 			</div>
 		</div>
 		<div class="col-sm-8 ">
-			<div class="form-group">
-				<p class="help-block text-center"><c:out value="${pageScope.alert}"/></p>
-			</div>
+			
 			<form  method="post" action="editIncident?param=<c:out value="${incident.id}"/>">
 			<table class="table table-bordered">
 				<tr>
@@ -79,13 +79,16 @@
 					<td ><strong>Area</strong></td>
 					<td>
 						<c:out value="${incident.area}" />
-						<select required class="form-control" id="place" name="area">
+						<select  class="form-control" id="place" required name="area">
 							<option value="">----- Select one -----</option>
 							<option value="OFFICE">Office</option>
 							<option value="WORKSHOP">Workshop</option>
 							<option value="PARK_LOOT">Park Loot</option>
 							<option value="PROJECT_SITE">Project Site</option>
 						</select>
+						<p class="help-block text-center">
+							<form:errors path="editedIncident.area"/>
+						</p>
 					</td>
 				</tr>
 				<tr>
@@ -98,6 +101,9 @@
 							<option value="UNSAFE_CONDITIONS">Unsafe Conditions</option>
 							<option value="SAFE_BEHAVIOURS">Safe Behaviours</option>
 						</select>
+						<p class="help-block text-center">
+							<form:errors path="editedIncident.typeOfObservation"/>
+						</p>
 					</td>
 				</tr>
 				<tr>
@@ -105,6 +111,9 @@
 					<td>
 						<c:out value="${incident.location}" />
 						<textarea class="form-control" rows="2" id="location" required name="location"> </textarea>
+						<p class="help-block text-center">
+							<form:errors path="editedIncident.location"/>
+						</p>
 					</td>
 				</tr>
 				<tr>
@@ -118,6 +127,9 @@
 							<option value="CLIENT">Client</option>
 							<option value="THIRD_PARTY">Third Party</option>
 						</select>
+						<p class="help-block text-center">
+							<form:errors path="editedIncident.cathegoryOfPersonel"/>
+						</p>
 					</td>
 				</tr>
 				<tr>
@@ -125,6 +137,9 @@
 					<td>
 						<c:out value="${incident.details}" />
 						<textarea class="form-control" rows="5" id="safetyDetails" required name="details"></textarea>
+						<p class="help-block text-center">
+							<form:errors path="editedIncident.details"/>
+						</p>
 					</td>
 				</tr>
 				<tr>
@@ -132,6 +147,9 @@
 					<td>
 						<c:out value="${incident.action}" />
 						<textarea class="form-control" rows="5" id="action" required name="action"></textarea>
+						<p class="help-block text-center">
+							<form:errors path="editedIncident.action"/>
+						</p>
 					</td>
 				</tr>
 				<tr>
@@ -140,6 +158,9 @@
 						<c:out value="${incident.supervisorInformed}" /></br>
 						<label class="radio-inline"><input type="radio" value="YES" name="supervisorInformed">Yes</label>
 						<label class="radio-inline"><input type="radio" value= "NO" checked="checked" name="supervisorInformed">No</label>
+						<p class="help-block text-center">
+							<form:errors path="editedIncident.supervisorInformed"/>
+						</p>
 					</td>
 				</tr>
 				<tr>

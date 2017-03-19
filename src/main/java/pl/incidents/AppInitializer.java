@@ -11,6 +11,7 @@ public class AppInitializer extends AbstractAnnotationConfigDispatcherServletIni
 	protected Class<?>[] getRootConfigClasses() {
 		return null;
 	}
+
 	/**
 	 * Registers configuration classes in Spring Context
 	 */

@@ -13,6 +13,10 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+import org.hibernate.validator.constraints.NotBlank;
 
 import pl.incidents.model.enums.Area;
 import pl.incidents.model.enums.CathegoryOfPersonel;
@@ -33,25 +37,35 @@ public class Incident implements Serializable {
 	@Column(name = "reporting_date", nullable = false)
 	private LocalDateTime reportingDate;
 	@Enumerated
+	@NotNull (message ="Select at least one value")
 	@Column(name = "area", nullable = false)
 	private Area area;
+	@NotBlank(message = "This field may not be empty")
+	@Size(max=500,message="Text cant be longer than 500 signs")
 	@Column(name = "location", nullable = false, length = 500)
 	private String location;
 	@Enumerated
+	@NotNull (message ="Select at least one value")
 	@Column(name = "type_of_observation", nullable = false)
 	private EventType typeOfObservation;
 	@Enumerated
+	@NotNull (message ="Select at least one value")
 	@Column(name = "cathegory_of_personel", nullable = false)
 	private CathegoryOfPersonel cathegoryOfPersonel;
+	@NotBlank(message = "This field may not be empty")
+	@Size(max=3000,message="Text cant be longer than 3000 signs")
 	@Column(name = "details", nullable = false, length = 3000)
 	private String details;
+	@NotBlank(message = "This field may not be empty")
+	@Size(max=3000,message="Text cant be longer than 3000 signs")
 	@Column(name = "action", nullable = false, length = 3000)
 	private String action;
 	@Enumerated
+	@NotNull (message ="Select at least one value")
 	@Column(name = "supervisor_informed", nullable = false)
 	private SupervisorInformed supervisorInformed;
 	@Enumerated
-	@Column(name = "incidentStatus", nullable = false)
+	@Column(name = "incident_status", nullable = false)
 	private IncidentStatus incidentStatus;
 	@ManyToOne
     @JoinColumn(name = "id_user")
@@ -77,9 +91,8 @@ public class Incident implements Serializable {
 		this.supervisorInformed = supervisorInformed;
 		this.incidentStatus = incidentStatus;
 		this.user = user;
-	}
-
 	
+	}
 
 
 	public long getId() {
@@ -161,7 +174,7 @@ public class Incident implements Serializable {
 	public void setSupervisorInformed(SupervisorInformed supervisorInformed) {
 		this.supervisorInformed = supervisorInformed;
 	}
-	
+
 
 	public IncidentStatus getIncidentStatus() {
 		return incidentStatus;
@@ -170,6 +183,7 @@ public class Incident implements Serializable {
 	public void setIncidentStatus(IncidentStatus incidentStatus) {
 		this.incidentStatus = incidentStatus;
 	}
+	
 
 	public User getUser() {
 		return user;

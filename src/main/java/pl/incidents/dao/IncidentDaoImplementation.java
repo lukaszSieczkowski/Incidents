@@ -20,8 +20,7 @@ public class IncidentDaoImplementation implements IncidentDao {
 	EntityTransaction tx;
 
 	public IncidentDaoImplementation() {
-		emFactory = Persistence.createEntityManagerFactory("myPersistanceUnit");
-		entityManager = emFactory.createEntityManager();
+
 	}
 
 	/**
@@ -30,8 +29,10 @@ public class IncidentDaoImplementation implements IncidentDao {
 	 * @param incident
 	 *            Incident with will be stored in data base.
 	 */
-	
+
 	public void saveIncident(Incident incident) {
+		emFactory = Persistence.createEntityManagerFactory("myPersistanceUnit");
+		entityManager = emFactory.createEntityManager();
 		tx = entityManager.getTransaction();
 		tx.begin();
 		entityManager.persist(incident);
@@ -45,9 +46,10 @@ public class IncidentDaoImplementation implements IncidentDao {
 	 * @param user
 	 * @return List of incidents
 	 */
-	
-	public List<Incident> getIncidents(User user) {
 
+	public List<Incident> getIncidents(User user) {
+		emFactory = Persistence.createEntityManagerFactory("myPersistanceUnit");
+		entityManager = emFactory.createEntityManager();
 		TypedQuery<Incident> query = null;
 		List<Object[]> list = null;
 		List<Incident> resultList = new ArrayList<>();
@@ -78,9 +80,10 @@ public class IncidentDaoImplementation implements IncidentDao {
 	 *            User id
 	 * @return Incident list
 	 */
-	
-	public List<Incident> getIncidentsByUserId(long id) {
 
+	public List<Incident> getIncidentsByUserId(long id) {
+		emFactory = Persistence.createEntityManagerFactory("myPersistanceUnit");
+		entityManager = emFactory.createEntityManager();
 		TypedQuery<Incident> query = null;
 		List<Object[]> list = null;
 		List<Incident> resultList = new ArrayList<>();
@@ -108,7 +111,8 @@ public class IncidentDaoImplementation implements IncidentDao {
 	 */
 
 	public Incident getIncident(long id) {
-
+		emFactory = Persistence.createEntityManagerFactory("myPersistanceUnit");
+		entityManager = emFactory.createEntityManager();
 		Incident incident = entityManager.find(Incident.class, id);
 		entityManager.close();
 
@@ -122,7 +126,8 @@ public class IncidentDaoImplementation implements IncidentDao {
 	 */
 
 	public void updateIncident(Incident incident) {
-
+		emFactory = Persistence.createEntityManagerFactory("myPersistanceUnit");
+		entityManager = emFactory.createEntityManager();
 		tx = entityManager.getTransaction();
 		tx.begin();
 		entityManager.merge(incident);

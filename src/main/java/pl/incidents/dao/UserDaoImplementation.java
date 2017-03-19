@@ -18,8 +18,7 @@ public class UserDaoImplementation implements UserDao {
 	EntityTransaction tx;
 
 	public UserDaoImplementation() {
-		emFactory = Persistence.createEntityManagerFactory("myPersistanceUnit");
-		entityManager = emFactory.createEntityManager();
+		
 	}
 
 	/**
@@ -29,6 +28,8 @@ public class UserDaoImplementation implements UserDao {
 	 */
 	@Override
 	public void saveUser(User user) {
+		emFactory = Persistence.createEntityManagerFactory("myPersistanceUnit");
+		entityManager = emFactory.createEntityManager();
 		tx = entityManager.getTransaction();
 		tx.begin();
 		entityManager.persist(user);
@@ -43,6 +44,8 @@ public class UserDaoImplementation implements UserDao {
 	 */
 	@Override
 	public ArrayList<User> getUsers() {
+		emFactory = Persistence.createEntityManagerFactory("myPersistanceUnit");
+		entityManager = emFactory.createEntityManager();
 		TypedQuery<User> query = entityManager.createQuery("SELECT c FROM User c", User.class);
 		ArrayList<User> resultList = (ArrayList<User>) query.getResultList();
 		return resultList;
@@ -56,6 +59,8 @@ public class UserDaoImplementation implements UserDao {
 	 * @return user
 	 */
 	public User getUser(long id) {
+		emFactory = Persistence.createEntityManagerFactory("myPersistanceUnit");
+		entityManager = emFactory.createEntityManager();
 		User user = entityManager.find(User.class, id);
 		entityManager.close();
 		return user;
@@ -67,6 +72,8 @@ public class UserDaoImplementation implements UserDao {
 	 * @param user
 	 */
 	public void updateUser(User user) {
+		emFactory = Persistence.createEntityManagerFactory("myPersistanceUnit");
+		entityManager = emFactory.createEntityManager();
 		EntityTransaction tx = entityManager.getTransaction();
 		tx.begin();
 		entityManager.merge(user);

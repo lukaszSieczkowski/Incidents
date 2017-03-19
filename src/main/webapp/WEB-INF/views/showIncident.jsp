@@ -8,6 +8,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java"
 	isELIgnored="false"%>
 
+<c:set var="incident" value="${incident}" scope="request"/>
 <!DOCTYPE html>
 <html>
 <head>
@@ -98,6 +99,7 @@
 					<td ><strong>Supervisior Informed</strong></td>
 					<td><c:out value="${incident.supervisorInformed}" /></td>
 				</tr>
+			
 				<tr>
 					<td ><strong>Incident Reported By</strong></td>
 					<td>

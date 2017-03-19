@@ -1,6 +1,5 @@
 package pl.incidents.controllers;
 
-import java.security.MessageDigest;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -14,8 +13,6 @@ import java.util.Optional;
 
 import java.util.stream.Collectors;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.apache.commons.codec.digest.DigestUtils;
@@ -23,7 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -51,7 +48,9 @@ import pl.incidents.model.enums.IncidentStatus;
 import pl.incidents.model.enums.SupervisorInformed;
 import pl.incidents.model.enums.UserActive;
 import pl.incidents.model.enums.UserType;
+import pl.incidents.presentation.Presentation;
 import pl.incidents.utils.CreateDate;
+
 import pl.incidents.utils.Mail;
 import pl.incidents.utils.MapCreator;
 import pl.incidents.utils.PasswordGenerator;
@@ -110,8 +109,15 @@ public class MainController {
 	@PostMapping("/login")
 	public String showUser(@RequestParam String username, @RequestParam String password, Model model) {
 
+		/////// Prepares data for presentation////////////
+
+		// Presentation.createData();
+
+		/////////////////////////////
+
 		UserDao userDao = new UserDaoImplementation();
 		IncidentDao incidentDao = new IncidentDaoImplementation();
+
 		ArrayList<User> userList = (ArrayList<User>) userDao.getUsers();
 
 		Optional<User> optionalUser = userList.stream().filter(a -> a.getEmail().equals(username)).findAny();
@@ -169,74 +175,89 @@ public class MainController {
 		request.removeAttribute("user", WebRequest.SCOPE_SESSION);
 		request.removeAttribute("date", WebRequest.SCOPE_SESSION);
 		request.removeAttribute("incidents", WebRequest.SCOPE_SESSION);
-
+		request.removeAttribute("users", WebRequest.SCOPE_SESSION);
 		return "index";
 	}
 
 	/**
-	 * Saves reported incident.
+	 * Saves reported incident
 	 * 
 	 * @param date
-	 *            Incident date.
+	 *            Incident date,
 	 * @param hour
-	 *            Incident time(hours).
+	 *            Incident time(hours),
 	 * @param minute
-	 *            Incident time(minutes).
+	 *            Incident time(minutes),
 	 * @param area
-	 *            Incident area.
+	 *            Incident Area.
 	 * @param location
-	 *            Incident location.
+	 *            Incident Location.
 	 * @param typeOfObservation
 	 *            Type of Incident.
 	 * @param cathegoryOfPersonel
 	 *            Category of personnel involved in incident.
 	 * @param details
-	 *            Details of incident.
+	 *            Incident details
 	 * @param action
 	 *            Actions taken.
-	 * @param supervisor
+	 * @param supervisorInformed
 	 *            Informed Information is Supervisor informed or not.
 	 * @param model
-	 *            Holder for attributes.
+	 *            Holder for attributes
 	 * @param user
-	 *            Logged user.
-	 * @return showIncident view.
+	 *            User whose reported incident
+	 * @param incident
+	 *            New incident object
+	 * @param result
+	 *            Holder for errors
+	 * @return reportIncident view
 	 */
 
 	@PostMapping("/saveIncident")
 	public String saveIncident(@RequestParam String date, @RequestParam int hour, @RequestParam int minute,
 			@RequestParam String area, @RequestParam String location, @RequestParam String typeOfObservation,
 			@RequestParam String cathegoryOfPersonel, @RequestParam String details, @RequestParam String action,
-			@RequestParam String supervisorInformed, Model model, @ModelAttribute User user) {
+			@RequestParam String supervisorInformed, Model model, @ModelAttribute User user,
+			@Valid @ModelAttribute("newIncident") Incident incident, BindingResult result) {
 
-		IncidentDao incidentDao = new IncidentDaoImplementation();
-		UserDao userDao = new UserDaoImplementation();
-		LocalDateTime reportingDate = LocalDateTime.now();
+		if (!result.hasErrors()) {
 
-		CreateDate createDate = new CreateDate();
-		LocalDateTime incidentDate = createDate.createDateFromString(date, hour, minute);
+			IncidentDao incidentDao = new IncidentDaoImplementation();
+			UserDao userDao = new UserDaoImplementation();
+			LocalDateTime reportingDate = LocalDateTime.now();
+			LocalDateTime incidentDate;
+			CreateDate createDate = new CreateDate();
+			try {
+				incidentDate = createDate.createDateFromString(date, hour, minute);
+			} catch (StringIndexOutOfBoundsException | NumberFormatException e) {
+				String alert;
+				alert = "Incorect  date format (dd-mm-yyyy)";
+				model.addAttribute("alert", alert);
+				return "reportIncident";
+			}
 
-		Incident incident = new Incident(incidentDate, reportingDate, Area.valueOf(area), location,
-				EventType.valueOf(typeOfObservation), CathegoryOfPersonel.valueOf(cathegoryOfPersonel), details, action,
-				SupervisorInformed.valueOf(supervisorInformed), IncidentStatus.OPEN, user);
+			incident = new Incident(incidentDate, reportingDate, Area.valueOf(area), location,
+					EventType.valueOf(typeOfObservation), CathegoryOfPersonel.valueOf(cathegoryOfPersonel), details,
+					action, SupervisorInformed.valueOf(supervisorInformed), IncidentStatus.OPEN, user);
+			incidentDao.saveIncident(incident);
 
-		incidentDao.saveIncident(incident);
+			List<User> usersList = userDao.getUsers();
+			List<User> adminList = usersList.stream().filter(a -> a.getUserType() == UserType.ADMIN)
+					.collect(Collectors.toList());
 
-		List<User> usersList = userDao.getUsers();
-		List<User> adminList = usersList.stream().filter(a -> a.getUserType() == UserType.ADMIN)
-				.collect(Collectors.toList());
+			Mail mail = new Mail();
+			String mailContent = mail.prepareContentNewIncidentReported(user, incident);
+			String subject = mail.prepareSubjectNewIncident();
+			for (int i = 0; i < adminList.size(); i++) {
+				mail.sendMail(adminList.get(i).getEmail(), mailContent, subject);
+			}
 
-		Mail mail = new Mail();
-
-		String mailContent = mail.prepareContentNewIncidentReported(user, incident);
-		String subject = mail.prepareSubjectNewIncident();
-		for (int i = 0; i < adminList.size(); i++) {
-			mail.sendMail(adminList.get(i).getEmail(), mailContent, subject);
+			model.addAttribute("incident", incident);
+			return "showIncident";
+		} else {
+			return "reportIncident";
 		}
 
-		model.addAttribute("incident", incident);
-
-		return "showIncident";
 	}
 
 	/**
@@ -245,7 +266,8 @@ public class MainController {
 	 * @return reportIncident view.
 	 */
 	@RequestMapping("/reportIncident")
-	public String reportIncident() {
+	public String reportIncident(Model model) {
+
 		return "reportIncident";
 	}
 
@@ -260,6 +282,7 @@ public class MainController {
 	 */
 	@GetMapping("/showIncident")
 	public String showIncident(@RequestParam long param, Model model) {
+
 		IncidentDao incidentDao = new IncidentDaoImplementation();
 		Incident incident = incidentDao.getIncident(param);
 
@@ -281,7 +304,6 @@ public class MainController {
 	public String showIncidents(@ModelAttribute User user, Model model) {
 
 		IncidentDao incidentDao = new IncidentDaoImplementation();
-
 		List<Incident> incidents = incidentDao.getIncidents(user);
 		incidents = incidents.stream().sorted((a, b) -> (a.getIncidentStatus().compareTo(b.getIncidentStatus())))
 				.collect(Collectors.toList());
@@ -314,6 +336,7 @@ public class MainController {
 
 	@RequestMapping("/getUsers")
 	public String showUsers(Model model) {
+
 		UserDao userDao = new UserDaoImplementation();
 		List<User> users = userDao.getUsers();
 		users = (List<User>) users.stream().sorted((a, b) -> (a.getUserActive().compareTo(b.getUserActive())))
@@ -349,34 +372,37 @@ public class MainController {
 			@RequestParam String userType, @Valid @ModelAttribute("newUser") User newUser, BindingResult result,
 			Model model) {
 
-		if (result.hasErrors()) {
-
-			model.addAttribute("errors", result.getAllErrors());
-		} else {
-
-			System.out.println("NEW USER " + newUser);
-
-			String password;
-			String md5Password;
+		if (!result.hasErrors()) {
 			String alert;
-			PasswordGenerator passwordGenerator = new PasswordGenerator();
-			password = passwordGenerator.generatePasword();
-
-			md5Password = DigestUtils.md5Hex(password).toString();
-
-			newUser = new User(email, md5Password, UserType.valueOf(userType), name, surname,
-					UserActive.valueOf("ACTIVE"));
 			UserDao userDao = new UserDaoImplementation();
-			userDao.saveUser(newUser);
+			List<User> usersList = userDao.getUsers();
+			Optional<User> optionalUser = usersList.stream().filter(a -> a.getEmail().equals(email)).findAny();
 
-			alert = "The user has been saved successfuly !!!";
-			model.addAttribute("alert", alert);
+			if (optionalUser.isPresent()) {
+				alert = "The user with given email already exist !!!";
+				model.addAttribute("alert", alert);
+			} else {
+				String password;
+				String md5Password;
 
-			Mail mail = new Mail();
-			String mailContent = mail.prepareContentNewUser(newUser, password);
-			String mailSubject = mail.prepareSubjectNewUser();
-			mail.sendMail(newUser.getEmail(), mailContent, mailSubject);
+				PasswordGenerator passwordGenerator = new PasswordGenerator();
+				password = passwordGenerator.generatePasword();
 
+				md5Password = DigestUtils.md5Hex(password).toString();
+
+				newUser = new User(email, md5Password, UserType.valueOf(userType), name, surname,
+						UserActive.valueOf("ACTIVE"));
+
+				userDao.saveUser(newUser);
+
+				alert = "The user has been saved successfuly !!!";
+				model.addAttribute("alert", alert);
+
+				Mail mail = new Mail();
+				String mailContent = mail.prepareContentNewUser(newUser, password);
+				String mailSubject = mail.prepareSubjectNewUser();
+				mail.sendMail(newUser.getEmail(), mailContent, mailSubject);
+			}
 		}
 
 		return "addUser";
@@ -426,6 +452,7 @@ public class MainController {
 			userWithDetails.setUserType(UserType.ADMIN);
 		}
 		String userTypeAfter = userWithDetails.getUserType().toString();
+
 		userDao.updateUser(userWithDetails);
 
 		String alert = "User type has been changed from " + userTypeBefore + " to " + userTypeAfter
@@ -447,6 +474,7 @@ public class MainController {
 	 */
 	@RequestMapping("/changeUserActivity")
 	public String changeUserActivity(Model model, long param) {
+
 		UserDao userDao = new UserDaoImplementation();
 		User userWithDetails = userDao.getUser(param);
 		String userActivityBefore = userWithDetails.getUserActive().toString();
@@ -501,6 +529,7 @@ public class MainController {
 	 */
 	@RequestMapping("/resetUserPassword")
 	public String resetPassword(Model model, long param) {
+
 		UserDao userDao = new UserDaoImplementation();
 		User userWithDetails = userDao.getUser(param);
 
@@ -522,6 +551,7 @@ public class MainController {
 		userWithDetails.setPassword(md5password);
 
 		userDao.updateUser(userWithDetails);
+
 		alert = "Tha password for " + userWithDetails.getName() + " " + userWithDetails.getSurname()
 				+ " has been changed  successfuly !!!";
 		model.addAttribute("userWithDetails", userWithDetails);
@@ -686,7 +716,6 @@ public class MainController {
 	public String showEditincident(@RequestParam long param, Model model) {
 		IncidentDao incidentDao = new IncidentDaoImplementation();
 		Incident incident = incidentDao.getIncident(param);
-
 		model.addAttribute("incident", incident);
 		return "editIncident";
 	}
@@ -708,33 +737,51 @@ public class MainController {
 	 *            Actions taken.
 	 * @param supervisorInformed
 	 *            Informed Information is Supervisor informed or not.
-	 * @param param
-	 *            Incident id.
 	 * @param model
-	 *            Holder for attributes.
-	 * @return showIncident view.
+	 *            Holder for attributes
+	 * @param param
+	 *            Incident id
+	 * @param model
+	 *            Holder for incidents
+	 * @param incident
+	 *            Incident object
+	 * @param result
+	 *            Holder for errors
+	 * @return showIncident or editIncident view
 	 */
 
 	@RequestMapping("/editIncident")
 	public String editIncident(@RequestParam String area, @RequestParam String location,
 			@RequestParam String typeOfObservation, @RequestParam String cathegoryOfPersonel,
 			@RequestParam String details, @RequestParam String action, @RequestParam String supervisorInformed,
-			@RequestParam long param, Model model) {
+			@RequestParam long param, Model model, @Valid @ModelAttribute("editedIncident") Incident incident,
+			BindingResult result) {
 
 		IncidentDao incidentDao = new IncidentDaoImplementation();
-		Incident incident = incidentDao.getIncident(param);
-		incident.setArea(Area.valueOf(area));
-		incident.setLocation(location);
-		incident.setTypeOfObservation(EventType.valueOf(typeOfObservation));
-		incident.setCathegoryOfPersonel(CathegoryOfPersonel.valueOf(cathegoryOfPersonel));
-		incident.setDetails(details);
-		incident.setAction(action);
-		incident.setSupervisorInformed(SupervisorInformed.valueOf(supervisorInformed));
+		Incident newIncident = incidentDao.getIncident(param);
 
-		incidentDao.updateIncident(incident);
+		if (result.hasErrors()) {
 
-		model.addAttribute("incident", incident);
-		return "showIncident";
+			model.addAttribute("incident", newIncident);
+
+			return "editIncident";
+		} else {
+			incidentDao = new IncidentDaoImplementation();
+			newIncident.setArea(Area.valueOf(area));
+			newIncident.setLocation(location);
+			newIncident.setTypeOfObservation(EventType.valueOf(typeOfObservation));
+			newIncident.setCathegoryOfPersonel(CathegoryOfPersonel.valueOf(cathegoryOfPersonel));
+			newIncident.setDetails(details);
+			newIncident.setAction(action);
+			newIncident.setSupervisorInformed(SupervisorInformed.valueOf(supervisorInformed));
+
+			incidentDao.updateIncident(newIncident);
+
+			model.addAttribute("incident", newIncident);
+
+			return "showIncident";
+		}
+
 	}
 
 	/**
@@ -765,17 +812,22 @@ public class MainController {
 	@RequestMapping("/changePassword")
 	public String changePassword(@RequestParam String oldPassword, @RequestParam String newPassword1,
 			@RequestParam String newPassword2, Model model, @ModelAttribute User user) {
+
 		String oldPasswordMd5 = DigestUtils.md5Hex(oldPassword).toString();
 
 		String alert = null;
+
 		if (oldPassword.length() < 9 || newPassword1.length() < 9 || newPassword2.length() < 9) {
 			alert = "Password have to contains at least 8 signs";
 		} else if (user.getPassword().equals(oldPasswordMd5) && newPassword1.equals(newPassword2)
 				&& (!newPassword1.equals(""))) {
-			UserDao userdao = new UserDaoImplementation();
+
 			String newPasswordMd5 = DigestUtils.md5Hex(newPassword1).toString();
 			user.setPassword(newPasswordMd5);
+
+			UserDao userdao = new UserDaoImplementation();
 			userdao.updateUser(user);
+
 			Mail mail = new Mail();
 			String mailContent = mail.prepareContentNewPassword(user, newPassword1);
 			String subject = mail.prepareSubjectNewPassword();

@@ -8,7 +8,7 @@ import pl.incidents.model.User;
 public interface IncidentDao {
 
 	/**
-	 * Save incident in data base
+	 * Saves incident
 	 * 
 	 * @param incident
 	 *            Incident with will be stored in data base.
@@ -16,7 +16,7 @@ public interface IncidentDao {
 	void saveIncident(Incident incident);
 
 	/**
-	 * Reads all available incidents from data base for user type.
+	 * Reads all available incidents for user type.
 	 * 
 	 * @param user
 	 * @return List of incidents
@@ -24,7 +24,7 @@ public interface IncidentDao {
 	public List<Incident> getIncidents(User user);
 
 	/**
-	 * Reads specific incident from data base
+	 * Reads specific incident
 	 * 
 	 * @param id
 	 *            User id.
@@ -33,7 +33,7 @@ public interface IncidentDao {
 	public Incident getIncident(long id);
 
 	/**
-	 * Reads incidents from data base reported by specific user
+	 * Reads incidents  reported by specific user
 	 * 
 	 * @param id
 	 *            User id

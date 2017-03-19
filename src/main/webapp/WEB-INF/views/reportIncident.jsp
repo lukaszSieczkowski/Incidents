@@ -1,7 +1,9 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" isELIgnored="false"%>
-		
+	<c:set var="alert" value="${alert}" scope="page" />		
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -62,16 +64,21 @@
 			</div>
 		</div>
 
-		<form  method="post" action="saveIncident">
+		<form  method="post" action="saveIncident" > 
 			<div class="col-sm-4 ">
 				<div class="form-group">
 					<label for="datepicker">Observation Date</label> <input type="text"
-						class="form-control" name="date" placeholder="dd-mm-yyyy" required
+						class="form-control" name="date" required placeholder="dd-mm-yyyy" 
 						id="datepicker">
+						
+					<p class="help-block text-center">
+						<c:out value="${pageScope.alert}" />
+					</p>
+				
 				</div>
 				<div class="form-group ">
 					<label for="time" id="labelTime">Observation Time</label> 
-					<select class="form-control" id="time" name="hour">
+					<select class="form-control" id="time"  name="hour">
 						<option>00</option>
 						<option>01</option>
 						<option>02</option>
@@ -105,26 +112,35 @@
 				</div>
 				<div class="form-group">
 					<label for="place">Area</label>
-					<select required class="form-control" id="place" name="area">
+					<select  class="form-control" id="place" required  name="area">
 						<option value="">----- Select one -----</option>
 						<option value="OFFICE">Office</option>
 						<option value="WORKSHOP">Workshop</option>
 						<option value="PARK_LOOT">Park Loot</option>
 						<option value="PROJECT_SITE">Project Site</option>
 					</select>
+					<p class="help-block text-center">
+						<form:errors path="newIncident.area"/>
+					</p>
 				</div>
 				<div class="form-group">
 					<label for="location">Exact Location</label>
 					<textarea class="form-control" rows="2" id="location" required name="location"> </textarea>
+					<p class="help-block text-center">
+						<form:errors path="newIncident.location"/>
+					</p>
 				</div>
 				<div class="form-group">
 					<label for="eventType">Event Type</label>
-					<select class="form-control" id="evenType" required name="typeOfObservation">
+					<select class="form-control" id="evenType"  required name="typeOfObservation">
 						<option value="">----- Select one -----</option>
 						<option value="UNSAFE_ACT">Unsafe Act</option>
 						<option value="UNSAFE_CONDITIONS">Unsafe Conditions</option>
 						<option value="SAFE_BEHAVIOURS">Safe Behaviours</option>
 					</select>
+					<p class="help-block text-center">
+						<form:errors path="newIncident.typeOfObservation"/>
+					</p>
 				</div>
 				<div class="form-group">
 					<label for="personel">Cathegory of Personeel</label>
@@ -135,6 +151,9 @@
 						<option value="CLIENT">Client</option>
 						<option value="THIRD_PARTY">Third Party</option>
 					</select>
+					<p class="help-block text-center">
+						<form:errors path="newIncident.cathegoryOfPersonel"/>
+					</p>
 				</div>
 			</div>
 			<div class="col-sm-4 col-sm-offset-1 ">
@@ -142,12 +161,18 @@
 					<label for="safetyDetails">Details of Safety Observation</label>
 					<textarea class="form-control" rows="5" id="safetyDetails" required name="details"></textarea>
 				</div>
+				<p class="help-block text-center">
+						<form:errors path="newIncident.details"/>
+					</p>
 			</div>
 			<div class="col-sm-4 col-sm-offset-1 ">
 				<div class="form-group">
 					<label for="action">Immediate Action Taken/Recommended</label>
 					<textarea class="form-control" rows="5" id="action" required name="action"></textarea>
 				</div>
+				<p class="help-block text-center">
+						<form:errors path="newIncident.action"/>
+					</p>
 			</div>
 			<div class="col-sm-4 col-sm-offset-1 ">
 				<div class="form-group">
@@ -155,13 +180,11 @@
 					<label class="radio-inline"><input type="radio" value="YES" name="supervisorInformed">Yes</label>
 					<label class="radio-inline"><input type="radio" value= "NO" checked="checked" name="supervisorInformed">No</label>
 				</div>
+				<p class="help-block text-center">
+						<form:errors path="newIncident.supervisorInformed"/>
+					</p>
 			</div>
-			<div class="col-sm-4 col-sm-offset-1 ">
-				<div class="form-group">
-					<label for="exampleInputFile">Supporting Informations</label> <input
-						type="file" id="exampleInputFile">
-				</div>
-			</div>
+			
 			<div class="col-sm-4 col-sm-offset-1 ">	
 				<button type="submit" class="btn btn-warning btn-lg ">Submit</button>
 			</div>

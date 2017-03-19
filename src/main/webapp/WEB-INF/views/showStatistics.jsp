@@ -3,6 +3,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" isELIgnored="false"%>
 
 <c:set var="chartForm" value="${chartForm}" scope="session" />
+<c:set var="alert" value="${alert}" scope="page" />	
 		
 <!DOCTYPE html>
 <html>
@@ -123,7 +124,12 @@
 			<div class="col-sm-2">
 				<button type="submit" class="btn btn-warning btn-lg ">Filter</button>
 			</div>
-		</form>
+			</form>
+		</div>
+		<div class="col-sm-8 ">
+			<p class="help-block text-center"><c:out value="${pageScope.alert}"/></p>
+		</div>
+		
 		<div id="chart"></div>
 	</div>	
 </body>

@@ -3,7 +3,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" isELIgnored="false"%>
 	
 <c:set var="alert" value="${alert}" scope="page" />	
-		
+<c:set var="users" value="${users}" scope="session" />			
 <!DOCTYPE html>
 <html>
 <head>

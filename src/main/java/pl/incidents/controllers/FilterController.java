@@ -74,6 +74,7 @@ public class FilterController {
 	public String filterIncidents(@RequestParam String dateStart, @RequestParam String dateEnd,
 			@RequestParam String area, @RequestParam String typeOfObservation, @RequestParam String cathegoryOfPersonel,
 			Model model, @ModelAttribute User user) {
+		
 		CreateDate createDate = new CreateDate();
 		IncidentDao incidentDao = new IncidentDaoImplementation();
 		List<Incident> incidents = incidentDao.getIncidents(user);
@@ -81,16 +82,32 @@ public class FilterController {
 
 		List<Incident> limitedIncident = incidentList.getIncidents();
 		if (!dateStart.equals("")) {
-			LocalDateTime startDate = createDate.createDateFromString(dateStart, 0, 0);
 
-			limitedIncident = incidentList.getIncidents().stream().filter(a -> (a.getIncidentDate().isAfter(startDate)))
-					.collect(Collectors.toList());
+			try {
+				LocalDateTime startDate = createDate.createDateFromString(dateStart, 0, 0);
+				limitedIncident = incidentList.getIncidents().stream()
+						.filter(a -> (a.getIncidentDate().isAfter(startDate))).collect(Collectors.toList());
+			} catch (StringIndexOutOfBoundsException | NumberFormatException e) {
+				String alert;
+				alert = "Incorect Start Date format (dd-mm-yyyy)";
+				model.addAttribute("alert", alert);
+
+			}
+
 		}
 		if (!dateEnd.equals("")) {
-			LocalDateTime endDate = createDate.createDateFromString(dateEnd, 0, 0);
-			limitedIncident = limitedIncident.stream().filter(a -> (a.getIncidentDate().isBefore(endDate)))
-					.collect(Collectors.toList());
+			try {
+				LocalDateTime endDate = createDate.createDateFromString(dateEnd, 0, 0);
+				limitedIncident = limitedIncident.stream().filter(a -> (a.getIncidentDate().isBefore(endDate)))
+						.collect(Collectors.toList());
+			} catch (StringIndexOutOfBoundsException | NumberFormatException e) {
+				String alert;
+				alert = "Incorect End Date format (dd-mm-yyyy)";
+				model.addAttribute("alert", alert);
+
+			}
 		}
+
 		if (!area.equals("")) {
 			limitedIncident = limitedIncident.stream().filter(a -> a.getArea().equals(Area.valueOf(area)))
 					.collect(Collectors.toList());
@@ -141,17 +158,30 @@ public class FilterController {
 		Map<String, Long> map = new HashMap<>();
 
 		if (!dateStart.equals("")) {
-			LocalDateTime startDate = createDate.createDateFromString(dateStart, 0, 0);
-			approvedIncidents = incidents.stream().filter(a -> a.getIncidentDate().isAfter(startDate))
-					.collect(Collectors.toList());
+			try {
+				LocalDateTime startDate = createDate.createDateFromString(dateStart, 0, 0);
+				approvedIncidents = incidents.stream().filter(a -> a.getIncidentDate().isAfter(startDate))
+						.collect(Collectors.toList());
+			} catch (StringIndexOutOfBoundsException | NumberFormatException e) {
+				String alert;
+				alert = "Incorect Start Date format (dd-mm-yyyy)";
+				System.out.println(alert);
+				model.addAttribute("alert", alert);
+			}
 		} else {
 			Incident first = Collections.min(approvedIncidents, Comparator.comparing(c -> c.getIncidentDate()));
 			dateStart = createDate.createDateToString(first.getIncidentDate());
 		}
 		if (!dateEnd.equals("")) {
-			LocalDateTime endDate = createDate.createDateFromString(dateEnd, 0, 0);
-			approvedIncidents = incidents.stream().filter(a -> a.getIncidentDate().isBefore(endDate))
-					.collect(Collectors.toList());
+			try {
+				LocalDateTime endDate = createDate.createDateFromString(dateEnd, 0, 0);
+				approvedIncidents = incidents.stream().filter(a -> a.getIncidentDate().isBefore(endDate))
+						.collect(Collectors.toList());
+			} catch (StringIndexOutOfBoundsException | NumberFormatException e) {
+				String alert;
+				alert = "Incorect End Date format (dd-mm-yyyy)";
+				model.addAttribute("alert", alert);
+			}
 		} else {
 			Incident last = Collections.max(approvedIncidents, Comparator.comparing(c -> c.getIncidentDate()));
 			dateEnd = createDate.createDateToString(last.getIncidentDate());

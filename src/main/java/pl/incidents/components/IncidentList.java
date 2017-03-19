@@ -14,7 +14,7 @@ import org.springframework.context.annotation.ScopedProxyMode;
 public class IncidentList {
 
 	private List<Incident> incidents;
-	
+
 	public IncidentList(List<Incident> incidents) {
 		this.incidents = incidents;
 	}

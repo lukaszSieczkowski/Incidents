@@ -68,14 +68,14 @@
 				</div>
 				<div class="form-group">
 					<label for="surname">Last Name</label> 
-					<input type="text" class="form-control" id="surname" required name="surname" />
+					<input type="text" class="form-control" id="surname" required  name="surname" />
 					<p class="help-block text-center">
 						<form:errors path="newUser.surname" />
 					</p>
 				</div>
 				<div class="form-group">
 					<label for="email">Email</label>
-					<input type="email" class="form-control" id="email" required name="email" />
+					<input type="email" class="form-control" id="email" required  name="email" />
 					<p class="help-block text-center">
 						<form:errors path="newUser.email" />
 					</p>
