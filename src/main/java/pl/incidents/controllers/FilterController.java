@@ -30,25 +30,12 @@ import pl.incidents.model.enums.IncidentStatus;
 import pl.incidents.utils.CreateDate;
 import pl.incidents.utils.MapCreator;
 
+import static pl.incidents.controllers.IController.*;
+
 @Controller
 @SessionAttributes("user")
 public class FilterController {
 
-	public static final String EMPTY_STRING = "";
-	public static final String INCIDENTS = "incidents";
-	public static final String SHOW_INCIDENTS = "showIncidents";
-	public static final String START_DATE = "startDate";
-	public static final String END_DATE = "endDate";
-	public static final String MAP = "map";
-	public static final String CHART_FORM = "chartForm";
-	public static final String SHOW_STATISTICS = "showStatistics";
-	public static final String INCORECT_END_DATE_FORMAT = "Incorect End Date format (dd-mm-yyyy)";
-	public static final String ALERT = "alert";
-	public static final String SLICED_PIE = "SLICED_PIE";
-	public static final String D_PIE = "3D_PIE";
-	public static final String DONUT = "DONUT";
-	public static final int HOUR_DEFAULT = 0;
-	public static final int MIN_DEFAULT = 0;
 	/**
 	 * Component with list of available incidents for logged user
 	 */

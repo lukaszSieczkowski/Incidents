@@ -1,39 +1,14 @@
 package pl.incidents.controllers;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-
-import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.Optional;
-
-import java.util.stream.Collectors;
-
-import javax.validation.Valid;
-
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttributes;
-
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.context.request.WebRequest;
-
 import pl.incidents.components.IncidentList;
-
 import pl.incidents.components.UserList;
 import pl.incidents.dao.IncidentDao;
 import pl.incidents.dao.IncidentDaoImplementation;
@@ -41,19 +16,19 @@ import pl.incidents.dao.UserDao;
 import pl.incidents.dao.UserDaoImplementation;
 import pl.incidents.model.Incident;
 import pl.incidents.model.User;
-import pl.incidents.model.enums.Area;
-import pl.incidents.model.enums.CathegoryOfPersonel;
-import pl.incidents.model.enums.EventType;
-import pl.incidents.model.enums.IncidentStatus;
-import pl.incidents.model.enums.SupervisorInformed;
-import pl.incidents.model.enums.UserActive;
-import pl.incidents.model.enums.UserType;
-import pl.incidents.presentation.Presentation;
+import pl.incidents.model.enums.*;
 import pl.incidents.utils.CreateDate;
-
 import pl.incidents.utils.Mail;
 import pl.incidents.utils.MapCreator;
 import pl.incidents.utils.PasswordGenerator;
+
+import javax.validation.Valid;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static pl.incidents.controllers.IController.*;
 
 @Controller
 @SessionAttributes("user")
@@ -73,7 +48,7 @@ public class MainController {
 	/**
 	 * Constructor for SortControler with injected incidentList and UsersList
 	 * 
-	 * @param incidentsList
+	 * @param incidentList
 	 *            component with list of incidents
 	 * @param usersList
 	 *            component with list of users
@@ -92,7 +67,7 @@ public class MainController {
 	 */
 	@RequestMapping("/")
 	public String showMain() {
-		return "index";
+		return INDEX;
 	}
 
 	/**
@@ -129,33 +104,33 @@ public class MainController {
 
 			if (user.getPassword().equals(formMd5Password)) {
 
-				model.addAttribute("user", user);
+				model.addAttribute(USER, user);
 
 				System.out.println(user);
 
 				LocalDateTime date = LocalDateTime.now();
-				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+				DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_FORMAT);
 				String formatedDate = date.format(formatter);
-				model.addAttribute("date", formatedDate);
+				model.addAttribute(DATE, formatedDate);
 
 				List<Incident> incidents = incidentDao.getIncidents(user);
 				incidents = incidents.stream()
 						.sorted((a, b) -> (a.getIncidentStatus().compareTo(b.getIncidentStatus())))
 						.collect(Collectors.toList());
 				incidentList.setIncidents(incidents);
-				model.addAttribute("incidents", incidentList.getIncidents());
+				model.addAttribute(INCIDENTS, incidentList.getIncidents());
 
-				return "showIncidents";
+				return SHOW_INCIDENTS;
 
 			} else {
-				String alert = "Incorrect Password !!!";
-				model.addAttribute("alert", alert);
-				return "index";
+				String alert = INCORRECT_PASSWORD;
+				model.addAttribute(ALERT, alert);
+				return INDEX;
 			}
 		} else {
-			String alert = "User does't exist!!!";
-			model.addAttribute("alert", alert);
-			return "index";
+			String alert = USER_DOES_T_EXIST;
+			model.addAttribute(ALERT, alert);
+			return INDEX;
 		}
 	}
 
@@ -172,11 +147,11 @@ public class MainController {
 	@RequestMapping("/logout")
 	public String logout(WebRequest request, SessionStatus status) {
 		status.setComplete();
-		request.removeAttribute("user", WebRequest.SCOPE_SESSION);
-		request.removeAttribute("date", WebRequest.SCOPE_SESSION);
-		request.removeAttribute("incidents", WebRequest.SCOPE_SESSION);
-		request.removeAttribute("users", WebRequest.SCOPE_SESSION);
-		return "index";
+		request.removeAttribute(USER, WebRequest.SCOPE_SESSION);
+		request.removeAttribute(DATE, WebRequest.SCOPE_SESSION);
+		request.removeAttribute(INCIDENTS, WebRequest.SCOPE_SESSION);
+		request.removeAttribute(USERS, WebRequest.SCOPE_SESSION);
+		return INDEX;
 	}
 
 	/**
@@ -231,9 +206,9 @@ public class MainController {
 				incidentDate = createDate.createDateFromString(date, hour, minute);
 			} catch (StringIndexOutOfBoundsException | NumberFormatException e) {
 				String alert;
-				alert = "Incorect  date format (dd-mm-yyyy)";
-				model.addAttribute("alert", alert);
-				return "reportIncident";
+				alert = INCORECT_END_DATE_FORMAT;
+				model.addAttribute(ALERT, alert);
+				return REPORT_INCIDENT;
 			}
 
 			incident = new Incident(incidentDate, reportingDate, Area.valueOf(area), location,
@@ -252,10 +227,10 @@ public class MainController {
 				mail.sendMail(adminList.get(i).getEmail(), mailContent, subject);
 			}
 
-			model.addAttribute("incident", incident);
-			return "showIncident";
+			model.addAttribute(INCIDENT, incident);
+			return SHOW_INCIDENTS;
 		} else {
-			return "reportIncident";
+			return REPORT_INCIDENT;
 		}
 
 	}
@@ -268,7 +243,7 @@ public class MainController {
 	@RequestMapping("/reportIncident")
 	public String reportIncident(Model model) {
 
-		return "reportIncident";
+		return REPORT_INCIDENT;
 	}
 
 	/**
@@ -286,9 +261,9 @@ public class MainController {
 		IncidentDao incidentDao = new IncidentDaoImplementation();
 		Incident incident = incidentDao.getIncident(param);
 
-		model.addAttribute("incident", incident);
+		model.addAttribute(INCIDENT, incident);
 
-		return "showIncident";
+		return SHOW_INCIDENTS;
 	}
 
 	/**
@@ -310,9 +285,9 @@ public class MainController {
 
 		incidentList.setIncidents(incidents);
 
-		model.addAttribute("incidents", incidentList.getIncidents());
+		model.addAttribute(INCIDENTS, incidentList.getIncidents());
 
-		return "showIncidents";
+		return SHOW_INCIDENTS;
 	}
 
 	/**
@@ -323,7 +298,7 @@ public class MainController {
 
 	@RequestMapping("/addUser")
 	public String addUser() {
-		return "addUser";
+		return ADD_USER;
 	}
 
 	/**
@@ -343,9 +318,9 @@ public class MainController {
 				.collect(Collectors.toList());
 		usersList.setUsers(users);
 
-		model.addAttribute("users", usersList.getUsers());
+		model.addAttribute(USERS, usersList.getUsers());
 
-		return "showUsers";
+		return SHOW_USERS;
 	}
 
 	/**
@@ -379,8 +354,8 @@ public class MainController {
 			Optional<User> optionalUser = usersList.stream().filter(a -> a.getEmail().equals(email)).findAny();
 
 			if (optionalUser.isPresent()) {
-				alert = "The user with given email already exist !!!";
-				model.addAttribute("alert", alert);
+				alert = THE_USER_WITH_GIVEN_EMAIL_ALREADY_EXIST;
+				model.addAttribute(ALERT, alert);
 			} else {
 				String password;
 				String md5Password;
@@ -391,12 +366,12 @@ public class MainController {
 				md5Password = DigestUtils.md5Hex(password).toString();
 
 				newUser = new User(email, md5Password, UserType.valueOf(userType), name, surname,
-						UserActive.valueOf("ACTIVE"));
+						UserActive.valueOf(ACTIVE));
 
 				userDao.saveUser(newUser);
 
-				alert = "The user has been saved successfuly !!!";
-				model.addAttribute("alert", alert);
+				alert = THE_USER_HAS_BEEN_SAVED_SUCCESSFULY;
+				model.addAttribute(ALERT, alert);
 
 				Mail mail = new Mail();
 				String mailContent = mail.prepareContentNewUser(newUser, password);
@@ -405,7 +380,7 @@ public class MainController {
 			}
 		}
 
-		return "addUser";
+		return ADD_USER;
 
 	}
 
@@ -425,9 +400,9 @@ public class MainController {
 		UserDao userDao = new UserDaoImplementation();
 		User userWithDetails = userDao.getUser(param);
 
-		model.addAttribute("userWithDetails", userWithDetails);
+		model.addAttribute(USER_WITH_DETAILS, userWithDetails);
 
-		return "showUser";
+		return SHOW_USER;
 	}
 
 	/**
@@ -457,10 +432,10 @@ public class MainController {
 
 		String alert = "User type has been changed from " + userTypeBefore + " to " + userTypeAfter
 				+ "  successfuly !!!";
-		model.addAttribute("userWithDetails", userWithDetails);
-		model.addAttribute("alert", alert);
+		model.addAttribute(USER_WITH_DETAILS, userWithDetails);
+		model.addAttribute(ALERT, alert);
 
-		return "showUser";
+		return SHOW_USER;
 	}
 
 	/**
@@ -479,7 +454,7 @@ public class MainController {
 		User userWithDetails = userDao.getUser(param);
 		String userActivityBefore = userWithDetails.getUserActive().toString();
 
-		if (userWithDetails.getUserActive().equals(UserActive.ACTIVE)) {
+		if (UserActive.ACTIVE.equals(userWithDetails.getUserActive())) {
 
 			userWithDetails.setUserActive(UserActive.INACTIVE);
 			PasswordGenerator pass = new PasswordGenerator();
@@ -512,10 +487,10 @@ public class MainController {
 
 		String alert = "User type has been changed from " + userActivityBefore + " to " + userActivityAfter
 				+ "  successfuly !!!";
-		model.addAttribute("userWithDetails", userWithDetails);
-		model.addAttribute("alert", alert);
+		model.addAttribute(USER_WITH_DETAILS, userWithDetails);
+		model.addAttribute(ALERT, alert);
 
-		return "showUser";
+		return SHOW_USER;
 	}
 
 	/**
@@ -554,10 +529,10 @@ public class MainController {
 
 		alert = "Tha password for " + userWithDetails.getName() + " " + userWithDetails.getSurname()
 				+ " has been changed  successfuly !!!";
-		model.addAttribute("userWithDetails", userWithDetails);
-		model.addAttribute("alert", alert);
+		model.addAttribute(USER_WITH_DETAILS, userWithDetails);
+		model.addAttribute(ALERT, alert);
 
-		return "showUser";
+		return SHOW_USER;
 	}
 
 	/**
@@ -582,8 +557,8 @@ public class MainController {
 			last = Collections.max(approvedIncidents, Comparator.comparing(c -> c.getIncidentDate()));
 		} catch (NoSuchElementException e) {
 			String alert = "Incident list is empty !!!";
-			model.addAttribute("alert", alert);
-			return "showIncidents";
+			model.addAttribute(ALERT, alert);
+			return SHOW_INCIDENTS;
 		}
 
 		MapCreator mapCreator = new MapCreator();
@@ -594,10 +569,10 @@ public class MainController {
 		String startDate = createDate.createDateToString(first.getIncidentDate());
 		String endDate = createDate.createDateToString(last.getIncidentDate());
 
-		model.addAttribute("startDate", startDate);
-		model.addAttribute("endDate", endDate);
-		model.addAttribute("chartForm", chartForm);
-		model.addAttribute("map", map);
+		model.addAttribute(START_DATE, startDate);
+		model.addAttribute(END_DATE, endDate);
+		model.addAttribute(CHART_FORM, chartForm);
+		model.addAttribute(MAP, map);
 
 		return "showStatistics";
 	}
@@ -624,12 +599,14 @@ public class MainController {
 		Incident first;
 		Incident last;
 		try {
+
+			//todo rid of duplicate
 			first = Collections.min(approvedIncidents, Comparator.comparing(c -> c.getIncidentDate()));
 			last = Collections.max(approvedIncidents, Comparator.comparing(c -> c.getIncidentDate()));
 		} catch (NoSuchElementException e) {
 			String alert = "Incident list is empty !!!";
-			model.addAttribute("alert", alert);
-			return "showUsers";
+			model.addAttribute(ALERT, alert);
+			return SHOW_USERS;
 		}
 		MapCreator mapCreator = new MapCreator();
 		Map<String, Long> map = mapCreator.createMapForArea(approvedIncidents);
@@ -639,10 +616,10 @@ public class MainController {
 		String startDate = createDate.createDateToString(first.getIncidentDate());
 		String endDate = createDate.createDateToString(last.getIncidentDate());
 
-		model.addAttribute("startDate", startDate);
-		model.addAttribute("endDate", endDate);
-		model.addAttribute("chartForm", chartForm);
-		model.addAttribute("map", map);
+		model.addAttribute(START_DATE, startDate);
+		model.addAttribute(END_DATE, endDate);
+		model.addAttribute(CHART_FORM, chartForm);
+		model.addAttribute(MAP, map);
 
 		return "showStatistics";
 	}
@@ -669,9 +646,9 @@ public class MainController {
 
 		incidentDao.updateIncident(incident);
 
-		model.addAttribute("incident", incident);
+		model.addAttribute(INCIDENT, incident);
 
-		return "showIncident";
+		return SHOW_INCIDENT;
 	}
 
 	/**
@@ -697,9 +674,9 @@ public class MainController {
 
 		incidentDao.updateIncident(incident);
 
-		model.addAttribute("incident", incident);
+		model.addAttribute(INCIDENT, incident);
 
-		return "showIncident";
+		return SHOW_INCIDENT;
 	}
 
 	/**
@@ -716,8 +693,8 @@ public class MainController {
 	public String showEditincident(@RequestParam long param, Model model) {
 		IncidentDao incidentDao = new IncidentDaoImplementation();
 		Incident incident = incidentDao.getIncident(param);
-		model.addAttribute("incident", incident);
-		return "editIncident";
+		model.addAttribute(INCIDENT, incident);
+		return EDIT_INCIDENT;
 	}
 
 	/**
@@ -762,9 +739,9 @@ public class MainController {
 
 		if (result.hasErrors()) {
 
-			model.addAttribute("incident", newIncident);
+			model.addAttribute(INCIDENT, newIncident);
 
-			return "editIncident";
+			return EDIT_INCIDENT;
 		} else {
 			incidentDao = new IncidentDaoImplementation();
 			newIncident.setArea(Area.valueOf(area));
@@ -777,9 +754,9 @@ public class MainController {
 
 			incidentDao.updateIncident(newIncident);
 
-			model.addAttribute("incident", newIncident);
+			model.addAttribute(INCIDENT, newIncident);
 
-			return "showIncident";
+			return SHOW_INCIDENT;
 		}
 
 	}
@@ -791,7 +768,7 @@ public class MainController {
 	 */
 	@RequestMapping("/editPassword")
 	public String editPassword() {
-		return "editPassword";
+		return EDIT_PASSWORD;
 	}
 
 	/**
@@ -818,7 +795,7 @@ public class MainController {
 		String alert = null;
 
 		if (oldPassword.length() < 9 || newPassword1.length() < 9 || newPassword2.length() < 9) {
-			alert = "Password have to contains at least 8 signs";
+			alert = PASSWORD_HAVE_TO_CONTAINS_AT_LEAST_8_SIGNS;
 		} else if (user.getPassword().equals(oldPasswordMd5) && newPassword1.equals(newPassword2)
 				&& (!newPassword1.equals(""))) {
 
@@ -832,15 +809,15 @@ public class MainController {
 			String mailContent = mail.prepareContentNewPassword(user, newPassword1);
 			String subject = mail.prepareSubjectNewPassword();
 			mail.sendMail(user.getEmail(), mailContent, subject);
-			alert = "Password was changed successful";
+			alert = PASSWORD_WAS_CHANGED_SUCCESSFUL;
 
 		} else if (!user.getPassword().equals(oldPasswordMd5)) {
-			alert = "Incorect old Password";
+			alert = INCORECT_OLD_PASSWORD;
 		} else if (!newPassword1.equals(newPassword2)) {
-			alert = "Passwords aren't equlas";
+			alert = PASSWORDS_AREN_T_EQULAS;
 		}
-		model.addAttribute("alert", alert);
-		return "editPassword";
+		model.addAttribute(ALERT, alert);
+		return EDIT_PASSWORD;
 	}
 
 }
