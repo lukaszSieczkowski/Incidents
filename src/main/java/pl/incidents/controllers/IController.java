@@ -42,4 +42,5 @@ public interface IController {
     String PASSWORD_WAS_CHANGED_SUCCESSFUL = "Password was changed successful";
     String INCORECT_OLD_PASSWORD = "Incorect old Password";
     String PASSWORDS_AREN_T_EQULAS = "Passwords aren't equlas";
+    String ASC = "asc";
 }

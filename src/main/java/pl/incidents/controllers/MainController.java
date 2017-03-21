@@ -33,7 +33,7 @@ import static pl.incidents.controllers.IController.*;
 @Controller
 @SessionAttributes("user")
 
-public class MainController {
+public class MainController implements IController {
 
 	/**
 	 * Component with list of available incidents for logged user

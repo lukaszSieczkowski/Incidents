@@ -15,7 +15,7 @@ import pl.incidents.model.Incident;
 import pl.incidents.model.User;
 
 @Controller
-public class SortController {
+public class SortController implements IController {
 
 	/**
 	 * Component with list of available incidents for logged user
@@ -55,17 +55,9 @@ public class SortController {
 	public String sortByIncudentDate(Model model, String param) {
 
 		List<Incident> incidents = incidentsList.getIncidents();
-		incidents = incidents.stream().sorted((a, b) -> (a.getIncidentDate().compareTo(b.getIncidentDate())))
-				.collect(Collectors.toList());
+		sortByDate(model, param, incidents);
 
-		if (param.equals("asc")) {
-			Collections.reverse(incidents);
-		}
-
-		incidentsList.setIncidents(incidents);
-		model.addAttribute("incidents", incidentsList.getIncidents());
-
-		return "showIncidents";
+		return SHOW_INCIDENTS;
 	}
 
 	/**
@@ -87,14 +79,14 @@ public class SortController {
 		incidents = incidents.stream().sorted((a, b) -> (a.getArea().compareTo(b.getArea())))
 				.collect(Collectors.toList());
 
-		if (param.equals("asc")) {
+		if (ASC.equals(param)) {
 			Collections.reverse(incidents);
 		}
 
 		incidentsList.setIncidents(incidents);
-		model.addAttribute("incidents", incidentsList.getIncidents());
+		model.addAttribute(	INCIDENTS, incidentsList.getIncidents());
 
-		return "showIncidents";
+		return SHOW_STATISTICS;
 	}
 
 	/**
@@ -115,14 +107,14 @@ public class SortController {
 		incidents = incidents.stream().sorted((a, b) -> (a.getTypeOfObservation().compareTo(b.getTypeOfObservation())))
 				.collect(Collectors.toList());
 
-		if (param.equals("asc")) {
+		if (ASC.equals(param)) {
 			Collections.reverse(incidents);
 		}
 
 		incidentsList.setIncidents(incidents);
-		model.addAttribute("incidents", incidentsList.getIncidents());
+		model.addAttribute(INCIDENTS, incidentsList.getIncidents());
 
-		return "showIncidents";
+		return SHOW_INCIDENTS;
 	}
 
 	/**
@@ -144,14 +136,14 @@ public class SortController {
 				.sorted((a, b) -> (a.getCathegoryOfPersonel().compareTo(b.getCathegoryOfPersonel())))
 				.collect(Collectors.toList());
 
-		if (param.equals("asc")) {
+		if (ASC.equals(param)) {
 			Collections.reverse(incidents);
 		}
 
 		incidentsList.setIncidents(incidents);
-		model.addAttribute("incidents", incidentsList.getIncidents());
+		model.addAttribute(INCIDENTS, incidentsList.getIncidents());
 
-		return "showIncidents";
+		return SHOW_INCIDENTS;
 	}
 
 	/**
@@ -173,14 +165,14 @@ public class SortController {
 				.sorted((a, b) -> (a.getSupervisorInformed().compareTo(b.getSupervisorInformed())))
 				.collect(Collectors.toList());
 
-		if (param.equals("asc")) {
+		if (ASC.equals(param)) {
 			Collections.reverse(incidents);
 		}
 
 		incidentsList.setIncidents(incidents);
-		model.addAttribute("incidents", incidentsList.getIncidents());
+		model.addAttribute(INCIDENTS, incidentsList.getIncidents());
 
-		return "showIncidents";
+		return SHOW_INCIDENTS;
 	}
 
 	/**
@@ -199,17 +191,27 @@ public class SortController {
 	public String sortByReportingtDate(Model model, String param) {
 
 		List<Incident> incidents = incidentsList.getIncidents();
+		sortByDate(model, param, incidents);
+
+		return SHOW_INCIDENTS;
+	}
+
+	/**
+	 * sorting incidents by date
+	 * @param model Holder for sorted incidentList attribute.
+	 * @param param  Specifies direction of sorting: asc - ascending or desc descending.
+	 * @param incidents list of incidents which supposed to sorted
+	 */
+	private void sortByDate(Model model, String param, List<Incident> incidents) {
 		incidents = incidents.stream().sorted((a, b) -> (a.getIncidentDate().compareTo(b.getIncidentDate())))
 				.collect(Collectors.toList());
 
-		if (param.equals("asc")) {
+		if (ASC.equals(param)) {
 			Collections.reverse(incidents);
 		}
 
 		incidentsList.setIncidents(incidents);
-		model.addAttribute("incidents", incidentsList.getIncidents());
-
-		return "showIncidents";
+		model.addAttribute(INCIDENTS, incidentsList.getIncidents());
 	}
 
 	/**
@@ -231,14 +233,14 @@ public class SortController {
 		incidents = incidents.stream().sorted((a, b) -> (a.getUser().getSurname().compareTo(b.getUser().getSurname())))
 				.collect(Collectors.toList());
 
-		if (param.equals("asc")) {
+		if (ASC.equals(param)) {
 			Collections.reverse(incidents);
 		}
 
 		incidentsList.setIncidents(incidents);
-		model.addAttribute("incidents", incidentsList.getIncidents());
+		model.addAttribute(INCIDENTS, incidentsList.getIncidents());
 
-		return "showIncidents";
+		return SHOW_INCIDENTS;
 	}
 
 	/**
@@ -260,14 +262,14 @@ public class SortController {
 		users = users.stream().sorted((a, b) -> (a.getSurname().compareTo(b.getSurname())))
 				.collect(Collectors.toList());
 
-		if (param.equals("asc")) {
+		if (ASC.equals(param)) {
 			Collections.reverse(users);
 		}
 
 		usersList.setUsers(users);
-		model.addAttribute("users", usersList.getUsers());
+		model.addAttribute(USERS, usersList.getUsers());
 
-		return "showUsers";
+		return SHOW_USERS;
 	}
 
 	/**
@@ -289,14 +291,14 @@ public class SortController {
 		users = users.stream().sorted((a, b) -> (a.getUserType().compareTo(b.getUserType())))
 				.collect(Collectors.toList());
 
-		if (param.equals("asc")) {
+		if (ASC.equals(param)) {
 			Collections.reverse(users);
 		}
 
 		usersList.setUsers(users);
-		model.addAttribute("users", usersList.getUsers());
+		model.addAttribute(USERS, usersList.getUsers());
 
-		return "showUsers";
+		return SHOW_USERS;
 	}
 
 	/**
@@ -318,13 +320,13 @@ public class SortController {
 		users = users.stream().sorted((a, b) -> (a.getUserActive().compareTo(b.getUserActive())))
 				.collect(Collectors.toList());
 
-		if (param.equals("asc")) {
+		if (ASC.equals(param)) {
 			Collections.reverse(users);
 		}
 
 		usersList.setUsers(users);
-		model.addAttribute("users", usersList.getUsers());
+		model.addAttribute(USERS, usersList.getUsers());
 
-		return "showUsers";
+		return SHOW_USERS;
 	}
 }

@@ -34,7 +34,7 @@ import static pl.incidents.controllers.IController.*;
 
 @Controller
 @SessionAttributes("user")
-public class FilterController {
+public class FilterController implements IController {
 
 	/**
 	 * Component with list of available incidents for logged user
