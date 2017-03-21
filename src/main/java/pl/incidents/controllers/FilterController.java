@@ -30,9 +30,11 @@ import pl.incidents.model.enums.IncidentStatus;
 import pl.incidents.utils.CreateDate;
 import pl.incidents.utils.MapCreator;
 
+import static pl.incidents.controllers.IController.*;
+
 @Controller
 @SessionAttributes("user")
-public class FilterController {
+public class FilterController implements IController {
 
 	/**
 	 * Component with list of available incidents for logged user
@@ -42,7 +44,7 @@ public class FilterController {
 	/**
 	 * Constructor for SortControler with injected incidentList.
 	 * 
-	 * @param incidentsList
+	 * @param incidentList
 	 *            component with list of incidents
 	 */
 	@Autowired
@@ -81,51 +83,51 @@ public class FilterController {
 		incidentList.setIncidents(incidents);
 
 		List<Incident> limitedIncident = incidentList.getIncidents();
-		if (!dateStart.equals("")) {
+		if (!EMPTY_STRING.equals(dateStart)) {
 
 			try {
-				LocalDateTime startDate = createDate.createDateFromString(dateStart, 0, 0);
+				LocalDateTime startDate = createDate.createDateFromString(dateStart, HOUR_DEFAULT, MIN_DEFAULT);
 				limitedIncident = incidentList.getIncidents().stream()
 						.filter(a -> (a.getIncidentDate().isAfter(startDate))).collect(Collectors.toList());
 			} catch (StringIndexOutOfBoundsException | NumberFormatException e) {
 				String alert;
-				alert = "Incorect Start Date format (dd-mm-yyyy)";
-				model.addAttribute("alert", alert);
+				alert = INCORECT_END_DATE_FORMAT;
+				model.addAttribute(ALERT, alert);
 
 			}
 
 		}
-		if (!dateEnd.equals("")) {
+		if (!EMPTY_STRING.equals(dateEnd)) {
 			try {
-				LocalDateTime endDate = createDate.createDateFromString(dateEnd, 0, 0);
+				LocalDateTime endDate = createDate.createDateFromString(dateEnd, HOUR_DEFAULT, MIN_DEFAULT);
 				limitedIncident = limitedIncident.stream().filter(a -> (a.getIncidentDate().isBefore(endDate)))
 						.collect(Collectors.toList());
 			} catch (StringIndexOutOfBoundsException | NumberFormatException e) {
 				String alert;
-				alert = "Incorect End Date format (dd-mm-yyyy)";
-				model.addAttribute("alert", alert);
+				alert = INCORECT_END_DATE_FORMAT;
+				model.addAttribute(ALERT, alert);
 
 			}
 		}
 
-		if (!area.equals("")) {
+		if (!EMPTY_STRING.equals(area)) {
 			limitedIncident = limitedIncident.stream().filter(a -> a.getArea().equals(Area.valueOf(area)))
 					.collect(Collectors.toList());
 		}
-		if (!typeOfObservation.equals("")) {
+		if (!EMPTY_STRING.equals(typeOfObservation)) {
 			limitedIncident = limitedIncident.stream()
 					.filter(a -> a.getTypeOfObservation().equals(EventType.valueOf(typeOfObservation)))
 					.collect(Collectors.toList());
 		}
-		if (!cathegoryOfPersonel.equals("")) {
+		if (!EMPTY_STRING.equals(cathegoryOfPersonel)) {
 			limitedIncident = limitedIncident.stream()
 					.filter(a -> a.getCathegoryOfPersonel().equals(CathegoryOfPersonel.valueOf(cathegoryOfPersonel)))
 					.collect(Collectors.toList());
 		}
 
 		incidentList.setIncidents(limitedIncident);
-		model.addAttribute("incidents", incidentList.getIncidents());
-		return "showIncidents";
+		model.addAttribute(INCIDENTS, incidentList.getIncidents());
+		return SHOW_INCIDENTS;
 	}
 
 	/**
@@ -157,37 +159,37 @@ public class FilterController {
 
 		Map<String, Long> map = new HashMap<>();
 
-		if (!dateStart.equals("")) {
+		if (!EMPTY_STRING.equals(dateStart)) {
 			try {
-				LocalDateTime startDate = createDate.createDateFromString(dateStart, 0, 0);
+				LocalDateTime startDate = createDate.createDateFromString(dateStart, HOUR_DEFAULT, MIN_DEFAULT);
 				approvedIncidents = incidents.stream().filter(a -> a.getIncidentDate().isAfter(startDate))
 						.collect(Collectors.toList());
 			} catch (StringIndexOutOfBoundsException | NumberFormatException e) {
 				String alert;
-				alert = "Incorect Start Date format (dd-mm-yyyy)";
+				alert = INCORECT_END_DATE_FORMAT;
 				System.out.println(alert);
-				model.addAttribute("alert", alert);
+				model.addAttribute(ALERT, alert);
 			}
 		} else {
 			Incident first = Collections.min(approvedIncidents, Comparator.comparing(c -> c.getIncidentDate()));
 			dateStart = createDate.createDateToString(first.getIncidentDate());
 		}
-		if (!dateEnd.equals("")) {
+		if (!EMPTY_STRING.equals(dateEnd)) {
 			try {
-				LocalDateTime endDate = createDate.createDateFromString(dateEnd, 0, 0);
+				LocalDateTime endDate = createDate.createDateFromString(dateEnd, HOUR_DEFAULT, MIN_DEFAULT);
 				approvedIncidents = incidents.stream().filter(a -> a.getIncidentDate().isBefore(endDate))
 						.collect(Collectors.toList());
 			} catch (StringIndexOutOfBoundsException | NumberFormatException e) {
 				String alert;
-				alert = "Incorect End Date format (dd-mm-yyyy)";
-				model.addAttribute("alert", alert);
+				alert = INCORECT_END_DATE_FORMAT;
+				model.addAttribute(ALERT, alert);
 			}
 		} else {
 			Incident last = Collections.max(approvedIncidents, Comparator.comparing(c -> c.getIncidentDate()));
 			dateEnd = createDate.createDateToString(last.getIncidentDate());
 		}
-		if (cathegory.equals(Cathegory.AREA.toString())
-				&& (chartForm.equals("SLICED_PIE") || chartForm.equals("3D_PIE") || chartForm.equals("DONUT"))) {
+		if (Cathegory.AREA.toString().equals(cathegory)
+				&& (chartForm.equals(SLICED_PIE) || chartForm.equals(D_PIE) || chartForm.equals(DONUT))) {
 
 			map = mapCreator.createMapForArea(approvedIncidents);
 		} else if (cathegory.equals(Cathegory.EVENT_TYPE.toString())) {
@@ -195,16 +197,16 @@ public class FilterController {
 			map = mapCreator.createMapForEvent(approvedIncidents);
 		}
 
-		else if (cathegory.equals(Cathegory.CATHEGORY_OF_PERSONEL.toString())) {
+		else if (Cathegory.CATHEGORY_OF_PERSONEL.toString().equals(cathegory)) {
 
 			map = mapCreator.createMapForPersonel(approvedIncidents);
 		}
 
-		model.addAttribute("startDate", dateStart);
-		model.addAttribute("endDate", dateEnd);
-		model.addAttribute("map", map);
-		model.addAttribute("chartForm", chartForm);
+		model.addAttribute(START_DATE, dateStart);
+		model.addAttribute(END_DATE, dateEnd);
+		model.addAttribute(MAP, map);
+		model.addAttribute(CHART_FORM, chartForm);
 
-		return "showStatistics";
+		return SHOW_STATISTICS;
 	}
 }
