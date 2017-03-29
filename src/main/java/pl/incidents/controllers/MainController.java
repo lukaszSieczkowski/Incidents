@@ -692,11 +692,7 @@ public class MainController implements IController {
 	@RequestMapping("/showEditIncident")
 	public String showEditincident(@RequestParam long param, Model model) {
 
-		IncidentDao incidentDao = new IncidentDaoImplementation();
-		Incident incident = incidentDao.getIncident(param);
-		model.addAttribute(INCIDENT, incident);
-		model.addAttribute("incident", incident);
-
+		
 		return "editIncident";
 
 	}
