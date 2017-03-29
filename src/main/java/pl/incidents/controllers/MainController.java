@@ -600,7 +600,7 @@ public class MainController implements IController {
 		Incident last;
 		try {
 
-			//todo rid of duplicate
+			// todo rid of duplicate
 			first = Collections.min(approvedIncidents, Comparator.comparing(c -> c.getIncidentDate()));
 			last = Collections.max(approvedIncidents, Comparator.comparing(c -> c.getIncidentDate()));
 		} catch (NoSuchElementException e) {
@@ -691,10 +691,14 @@ public class MainController implements IController {
 
 	@RequestMapping("/showEditIncident")
 	public String showEditincident(@RequestParam long param, Model model) {
+
 		IncidentDao incidentDao = new IncidentDaoImplementation();
 		Incident incident = incidentDao.getIncident(param);
 		model.addAttribute(INCIDENT, incident);
-		return EDIT_INCIDENT;
+		model.addAttribute("incident", incident);
+
+		return "editIncident";
+
 	}
 
 	/**
