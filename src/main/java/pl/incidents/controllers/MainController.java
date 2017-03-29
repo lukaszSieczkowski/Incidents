@@ -693,7 +693,7 @@ public class MainController implements IController {
 	public String showEditincident(@RequestParam long param, Model model) {
 		IncidentDao incidentDao = new IncidentDaoImplementation();
 		Incident incident = incidentDao.getIncident(param);
-		//model.addAttribute(INCIDENT, incident);
+		model.addAttribute(INCIDENT, incident);
 		return EDIT_INCIDENT;
 	}
 
