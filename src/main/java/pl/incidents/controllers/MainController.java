@@ -17,6 +17,7 @@ import pl.incidents.dao.UserDaoImplementation;
 import pl.incidents.model.Incident;
 import pl.incidents.model.User;
 import pl.incidents.model.enums.*;
+import pl.incidents.presentation.Presentation;
 import pl.incidents.utils.CreateDate;
 import pl.incidents.utils.Mail;
 import pl.incidents.utils.MapCreator;
@@ -263,7 +264,7 @@ public class MainController implements IController {
 
 		model.addAttribute(INCIDENT, incident);
 
-		return SHOW_INCIDENTS;
+		return SHOW_INCIDENT;
 	}
 
 	/**
@@ -691,10 +692,10 @@ public class MainController implements IController {
 
 	@RequestMapping("/showEditIncident")
 	public String showEditincident(@RequestParam long param, Model model) {
-
-		
-		return "editIncident";
-
+		IncidentDao incidentDao = new IncidentDaoImplementation();
+ 		Incident incident = incidentDao.getIncident(param);
+ 		model.addAttribute(INCIDENT, incident);
+		return EDIT_INCIDENT;
 	}
 
 	/**
